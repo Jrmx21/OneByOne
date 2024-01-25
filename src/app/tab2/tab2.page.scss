@@ -1,0 +1,48 @@
+ion-card-header{
+   align-items: center;
+}
+ion-card{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.fuentefrase{
+    font-size: 2.5em;
+    font-weight: bold;
+    text-align: center;
+
+}
+.titulo-card{
+    font-size: 200%;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
+.compartir{
+    font-size: 100%;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 50%;
+}
+.actualizar{
+    font-size: 100%;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 50%;
+}
+.botones{
+    flex: 2;
+    display: flex;
+    flex-direction: row;
+}
+.fuenteautor{
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}

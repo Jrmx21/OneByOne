@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-title>{{myApp}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="custom-content">
+  <ion-segment [(ngModel)]="campoBusqueda" (ionChange)="realizarBusqueda()" class="custom-segment">
+    <ion-segment-button value="frase">
+      <ion-label>Frase</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="autor">
+      <ion-label>Autor</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-searchbar [(ngModel)]="filtro" (ionInput)="realizarBusqueda()" placeholder="Buscar" class="custom-searchbar"></ion-searchbar>
+
+  <ion-list class="custom-list">
+    <ion-item *ngFor="let frase of frases" class="custom-item">
+      <ion-label>"{{ frase.frase }}" - {{ frase.autor }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

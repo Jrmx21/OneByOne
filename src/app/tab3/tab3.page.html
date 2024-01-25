@@ -1,0 +1,43 @@
+<!-- app.component.html -->
+
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-title>{{myApp}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title color="primary">Escribe tu frase del día</ion-card-title>
+      <ion-card-subtitle>Si tienes suerte aparecerás en la aplicación!</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="ion-text-center">
+        <ion-button (click)="mostrarIntroFraseUsuario()" size="large" color="secondary">
+          <ion-icon name="pencil-outline"></ion-icon>
+        </ion-button>
+      
+    
+      <ion-select [(ngModel)]="tipoAutor" *ngIf="showIntroUsuario" placeholder="Selecciona el tipo de autor">
+        <ion-select-option value="anonimo" >Anónimo</ion-select-option>
+        <ion-select-option value="autor" >Autor</ion-select-option>
+      </ion-select>
+    
+      <ion-input label="Frase usuario" labelPlacement="floating" *ngIf="showIntroUsuario" color="primary"
+        [(ngModel)]="frase" placeholder="Introduce tu frase diaria"></ion-input>
+    
+      <ion-input label="Autor usuario" labelPlacement="floating" *ngIf="showIntroUsuario && tipoAutor === 'autor'" color="primary"
+        [(ngModel)]="autor" placeholder="Introduce tu nombre"></ion-input>
+
+      <ion-button *ngIf="showIntroUsuario" (click)="publicarFrase()" color="secondary">Enviar al ADMIN</ion-button>
+    </div>
+    </ion-card-content>
+    
+  </ion-card>
+  
+</ion-content>
+

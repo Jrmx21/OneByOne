@@ -1,0 +1,6 @@
+--- ONE BY ONE ---
+
+INDEV 0.1
+- La tab1 aun no tiene nada.
+- La tab2 la he reprogramado por encima y he puesto un sistema de BD basado en un json ubicado en la carpeta assets.
+- La tab3 he añadido que se guarde en dos variables el autor y la frase que más adelante podrá enviar el usuario.

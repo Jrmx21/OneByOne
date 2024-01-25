@@ -1,0 +1,16 @@
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Editar Frase</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content> 
+      <ion-item>
+        <ion-label>Frase:</ion-label>
+        <ion-input [(ngModel)]="frase.frase"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Autor:</ion-label>
+        <ion-input [(ngModel)]="frase.autor"></ion-input>
+      </ion-item>
+      <ion-button (click)="guardarEdicion()">Guardar</ion-button>
+    </ion-content>
