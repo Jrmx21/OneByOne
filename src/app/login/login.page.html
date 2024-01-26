@@ -1,4 +1,4 @@
-<!-- login.page.html -->
+<!-- login.page.html
 <ion-header>
   <ion-toolbar color="secondary">
     <ion-title>Login</ion-title>
@@ -20,4 +20,23 @@
   <ion-button expand="full" (click)="login()">Iniciar sesión</ion-button>
   <ion-button expand="full"  (click)="loginWithGoogle()">Iniciar Sesion  <ion-icon name="logo-google"></ion-icon></ion-button>
   <ion-button expand="full" color="success" routerLink="/register">Registrarse</ion-button>
+</ion-content> -->
+
+<!-- login.component.html -->
+<ion-content>
+  <ion-card>
+    <ion-card-title>Login</ion-card-title>
+    <ion-button routerLink="/">Volver</ion-button>
+    <ion-item>
+      <ion-label>Usuario:</ion-label>
+      <ion-input [(ngModel)]="username" placeholder="Ingrese su usuario"></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label>Contraseña:</ion-label>
+      <ion-input [(ngModel)]="password" type="password" placeholder="Ingrese su contraseña"></ion-input>
+    </ion-item>
+    
+    <ion-button (click)="login()">Iniciar sesión</ion-button>
+  </ion-card>
 </ion-content>

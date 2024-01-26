@@ -124,20 +124,20 @@ export class Tab2Page {
     this.isFrase = false; //DEJA DE MOSTRAR LA FRASE
   }
 
-  onClick() {
-    this.authService
-      .logout()
-      .then(() => {
-        this.router.navigate(['/login']);
-      })
-      .catch(async (error) => {
-        const toast = await this.toastController.create({
-          message: error.message,
-          duration: 2000,
-        });
-        toast.present();
-      });
-  }
+  // onClick() {
+  //   this.authService
+  //     .logout()
+  //     .then(() => {
+  //       this.router.navigate(['/login']);
+  //     })
+  //     .catch(async (error:any) => {
+  //       const toast = await this.toastController.create({
+  //         message: error.message,
+  //         duration: 2000,
+  //       });
+  //       toast.present();
+  //     });
+  // }
 }
 //XXX NO FUNCIONAL DEMOMENTO XXX
 // handleRefresh(event: any) {

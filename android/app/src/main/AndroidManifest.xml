@@ -34,7 +34,7 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
       <service
-        android:name=".java.MyFirebaseMessagingService"
+        android:name=".MyFirebaseMessagingService"
         android:exported="false">
         <intent-filter>
           <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -42,7 +42,7 @@
       </service>
     </application>
 
-    <!-- Permissions -->
-
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
+
 </manifest>

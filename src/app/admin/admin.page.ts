@@ -4,6 +4,7 @@ import { ModalController, NavController } from '@ionic/angular';
 import { EdicionFraseModalPage } from '../modals/edicion-frase-modal/edicion-frase-modal.page';
 import { AuthService } from '../services/auth.service';
 import { LowerCasePipe } from '@angular/common';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.page.html',
@@ -22,7 +23,8 @@ export class AdminPage implements OnInit {
     private dataService: DataService,
     private navCtrl: NavController,
     private modalController: ModalController,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) {}
   tipoBusqueda: 'id' | 'fecha' | 'autor' | 'frase' = 'id';
   private filtrarPorFecha(lista: any[]): any[] {
@@ -203,5 +205,12 @@ moverAFrasesDesdeDelDia(index: number) {
           // Puedes realizar acciones adicionales después de guardar los datos si es necesario
         });
     });
+  }
+  ionViewWillEnter() {
+    // Verificar si el usuario está autenticado al entrar en la vista
+    if (!this.auth.isLoggedIn()) {
+      // Si no está autenticado, redirigir a la página de login
+      this.router.navigate(['/login']);
+    }
   }
 }
