@@ -127,18 +127,58 @@ moverAFrasesDesdeDelDia(index: number) {
       this.nuevaFrase = {};
     }
   }
-
-  actualizarFrase(index: number, fraseActualizada: any) {
-    if (index >= 0 && index < this.frases.length) {
-      this.frases[index] = { ...this.frases[index], ...fraseActualizada };
-      this.guardarFrases();
+  modoAutomatico() {
+    // Verificar si hay frases disponibles para el modo automático
+    if (this.frasesDelDia.length < this.frases.length) {
+      // Seleccionar una frase aleatoria que no esté en frasesDelDia
+      const frasesDisponibles = this.frases.filter(
+        frase => !this.frasesDelDia.some(fd => fd.frase === frase.frase)
+      );
+  
+      if (frasesDisponibles.length > 0) {
+        const indexAleatorio = Math.floor(Math.random() * frasesDisponibles.length);
+        const fraseAleatoria = frasesDisponibles[indexAleatorio];
+  
+        // Agregar la frase del día
+        this.frasesDelDia.push({
+          ...fraseAleatoria,
+          fecha: new Date().toISOString(),
+        });
+  
+        // Agregar la frase usada
+        this.frasesUsuario.push({
+          ...fraseAleatoria,
+          fecha: new Date().toISOString(),
+        });
+  
+        // Guardar los cambios
+        this.guardarFrasesYUsuarioYDelDia();
+      } else {
+        console.log('No hay más frases disponibles para el modo automático.');
+      }
+    } else {
+      console.log('Todas las frases ya están en frasesDelDia.');
     }
   }
-
-  abrirFormularioEdicion(index: number) {
+  actualizarFrase(index: number, fraseActualizada: any, esFrasesUsuario: boolean = false) {
+    // Seleccionar la lista correspondiente según el parámetro esFrasesUsuario
+    const lista = esFrasesUsuario ? this.frasesUsuario : this.frases;
+  
+    if (index >= 0 && index < lista.length) {
+      lista[index] = { ...lista[index], ...fraseActualizada };
+  
+      // Guardar las frases según la lista correspondiente
+      esFrasesUsuario ? this.guardarFrasesYUsuario() : this.guardarFrases();
+    }
+  }
+  abrirFormularioEdicion(index: number, esFrasesUsuario: boolean = false) {
     console.log('Index: ', index);
-    const fraseSeleccionada = this.frases[index];
-
+  
+    // Seleccionar la lista correspondiente según el parámetro esFrasesUsuario
+    const lista = esFrasesUsuario ? this.frasesUsuario : this.frases;
+  
+    const fraseSeleccionada = lista[index];
+  
     if (fraseSeleccionada) {
       this.modalController
         .create({
@@ -149,7 +189,8 @@ moverAFrasesDesdeDelDia(index: number) {
           modal.present();
           modal.onDidDismiss().then((result) => {
             if (result && result.data) {
-              this.actualizarFrase(index, result.data);
+              // Actualizar la frase en la lista correspondiente
+              this.actualizarFrase(index, result.data, esFrasesUsuario);
             }
           });
         });

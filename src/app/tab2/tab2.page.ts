@@ -25,14 +25,15 @@ export class Tab2Page {
   isFrase: boolean = false;
   autor: string = ' no hay autor';
   isModalOpen = false;
-
+  
   constructor(
     private modalController: ModalController,
     private navCtrl: NavController,
     private dataService: DataService,
     private authService: AuthService,
     private router: Router,
-    private toastController: ToastController
+    private toastController: ToastController,
+    
   ) {}
   ngOnInit() {
     this.seleccionarFraseAleatoria();
@@ -40,7 +41,44 @@ export class Tab2Page {
     this.dataService.guardarDatos(this.frase).subscribe((data) => {
       console.log(data);
     });
+
   }
+  ionViewWillEnter() {
+    // Verificar si la cookie 'modal' está presente
+    const modalCookie = this.getCookie('modal');
+console.log("MODAL COOKASO------"+modalCookie);
+    if (modalCookie == 'false') {
+      this.mostrarBienvenida = false;
+    } else {
+      this.mostrarBienvenida = true;
+      console.log(this.mostrarBienvenida+"ESTA ES LA BIENVENIDA");
+      // Establecer la cookie 'modal' en 'false' para la próxima vez
+      this.setCookie('modal', 'false', 365); // El tercer parámetro es la duración en días
+    }
+  }
+  private setCookie(name: string, value: string, days: number): void {
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + days);
+
+    const cookieValue = `${name}=${value};expires=${expirationDate.toUTCString()};path=/`;
+    document.cookie = cookieValue;
+  }
+
+  private getCookie(name: string): string | null {
+    const cookies = document.cookie.split(';');
+
+    for (let cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+
+      if (cookieName.trim() === name) {
+        return cookieValue;
+      }
+    }
+
+    return null;
+  }
+
+
   // async moverFrase() {
   //   if (!this.fraseIdInput) {
   //     console.error('Por favor, ingrese una ID válida');
@@ -63,7 +101,7 @@ export class Tab2Page {
       title: '¡Mira esta frase!',
       text:
         'Buenas, te comparto esta frase: ' + this.frase + ' - ' + this.autor,
-      url: 'url',
+      // url: '',
       dialogTitle: 'Comparte a tus amigos :)',
     });
   }

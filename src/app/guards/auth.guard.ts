@@ -25,7 +25,6 @@ constructor(private router :Router,private authService: AuthService) {
           resolve(false);
         }
       });
-
     });
   }
   

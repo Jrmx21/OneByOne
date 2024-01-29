@@ -4,6 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { AuthGuard } from './guards/auth.guard';
 import { NoAuthGuard } from './guards/no-auth.guard';
+import { loginGuard } from './guards/login.guard';
 // import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
@@ -11,6 +12,7 @@ const routes: Routes = [
     path: '',
     loadChildren: () =>
       import('./tabs/tabs.module').then((m) => m.TabsPageModule),
+    
   },
   {
     path: 'admin',
@@ -35,7 +37,7 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () =>
       import('./login/login.module').then((m) => m.LoginPageModule),
-  },
+  }
 ];
 @NgModule({
   imports: [

@@ -43,6 +43,12 @@
 
 <ion-content>
   <ion-card>
+    <ion-card-content>
+      <ion-button (click)="modoAutomatico()">Modo Automático</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
     <ion-card-title>Añadir a frase</ion-card-title>
     <ion-item>
       <ion-label>Frase:</ion-label>
@@ -72,7 +78,7 @@
       <ion-label>Frases del Día</ion-label>
     </ion-segment-button>
   </ion-segment>
-  
+
   <ion-card *ngIf="campoBusqueda === 'frases'">
     <ion-card-title>Frases</ion-card-title>
     <ion-list>
@@ -81,8 +87,12 @@
         {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
         <ion-button (click)="abrirFormularioEdicion(i)">Actualizar</ion-button>
         <ion-button (click)="eliminarFrase(i)">Eliminar</ion-button>
-        <ion-button (click)="moverAFrasesUsuario(i)">Mover a Frases Usuario</ion-button>
-        <ion-button color="success" (click)="moverAFrasesDelDia(i)"><ion-icon name="flag-outline"></ion-icon></ion-button>
+        <ion-button (click)="moverAFrasesUsuario(i)"
+          >Mover a Frases Usuario</ion-button
+        >
+        <ion-button color="success" (click)="moverAFrasesDelDia(i)"
+          ><ion-icon name="flag-outline"></ion-icon
+        ></ion-button>
       </ion-item>
     </ion-list>
   </ion-card>
@@ -94,7 +104,10 @@
       <!-- Utilizar *ngFor con la función filtrarFrases() -->
       <ion-item *ngFor="let frase of filtrarFrases(frasesUsuario); let i=index">
         {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
-        <ion-button (click)="abrirFormularioEdicion(i)">Actualizar</ion-button>
+        <ion-button
+          (click)="abrirFormularioEdicion(i, campoBusqueda === 'frases_usuario')"
+          >Actualizar</ion-button
+        >
         <ion-button (click)="eliminarFraseUsuario(i)">Eliminar</ion-button>
         <ion-button (click)="moverAFrases(i)">Mover a Frases</ion-button>
       </ion-item>
@@ -108,8 +121,12 @@
       <!-- Utilizar *ngFor con la función filtrarFrases() -->
       <ion-item *ngFor="let frase of filtrarFrases(frasesDelDia); let i=index">
         {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
-        <ion-button (click)="moverAFrasesUsuarioDesdeDelDia(i)">Mover a Frases Usuario</ion-button>
-        <ion-button (click)="moverAFrasesDesdeDelDia(i)">Mover a Frases</ion-button>
+        <ion-button (click)="moverAFrasesUsuarioDesdeDelDia(i)"
+          >Mover a Frases Usuario</ion-button
+        >
+        <ion-button (click)="moverAFrasesDesdeDelDia(i)"
+          >Mover a Frases</ion-button
+        >
       </ion-item>
     </ion-list>
   </ion-card>
