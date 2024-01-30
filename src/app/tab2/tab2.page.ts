@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, enableProdMode } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { DataService } from '../services/data.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { Share } from '@capacitor/share';
+import { Camera, CameraResultType } from '@capacitor/camera';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import { environment } from 'src/environments/environment';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-tab2',
@@ -25,7 +29,7 @@ export class Tab2Page {
   isFrase: boolean = false;
   autor: string = ' no hay autor';
   isModalOpen = false;
-  
+  fotoUrl: string | null = '';
   constructor(
     private modalController: ModalController,
     private navCtrl: NavController,
@@ -33,6 +37,7 @@ export class Tab2Page {
     private authService: AuthService,
     private router: Router,
     private toastController: ToastController,
+    private cookieService: CookieService
     
   ) {}
   ngOnInit() {
@@ -41,8 +46,15 @@ export class Tab2Page {
     this.dataService.guardarDatos(this.frase).subscribe((data) => {
       console.log(data);
     });
-
+    defineCustomElements(window);
+    if (environment.production) {
+      enableProdMode();
+    }
+    this.fotoUrl = this.getCookie('fotoUrl')
+    console.log(this.fotoUrl ,"ESTA ES LA FOTO URL");
   }
+    
+ 
   ionViewWillEnter() {
     // Verificar si la cookie 'modal' está presente
     const modalCookie = this.getCookie('modal');
@@ -136,6 +148,22 @@ console.log("MODAL COOKASO------"+modalCookie);
       event.target.complete();
       this.seleccionarFraseAleatoria();
     }, 500);
+  }
+   takePicture = async () => {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Base64
+    });
+    console.log(image);
+
+    this.savePhoto(image.base64String!);
+  
+    // Can be set to the src of an image now
+    // imageElement.src = imageUrl;
+  };
+  savePhoto(photo:string){
+    this.dataService.guardarFoto(photo)
   }
   async presentarTostada(message: string, color: string) {
     const toast = await this.toastController.create({

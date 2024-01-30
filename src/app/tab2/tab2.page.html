@@ -39,9 +39,7 @@
     </ion-buttons>
   </ion-toolbar>
  
-  <!-- <ion-button routerLink="/register">Sign Up</ion-button>
-  <ion-button routerLink="/login">Sign IN</ion-button>
-  <ion-button (click)="onClick()">Logout</ion-button> -->
+
 </ion-header>
 <!--
 <ion-menu contentId="main-content">
@@ -133,6 +131,18 @@
     color="secondary"
     >Autor</ion-button
   >
+  <ion-card>
+    <ion-title>
+      Foto del día
+    </ion-title>
+    <ion-card-content>
+      <ion-button (click)="takePicture()"
+      color="success"
+      ><ion-icon name="camera"></ion-icon>Tomar Foto</ion-button
+    >
+    <img src="{{fotoUrl}}">
+    </ion-card-content>
+  </ion-card>
   <ion-modal [isOpen]="isModalOpen">
     <ng-template>
       <ion-header >
