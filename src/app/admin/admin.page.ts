@@ -23,6 +23,7 @@ export class AdminPage implements OnInit {
   isModalOpen = false;
   listaImagenes: any[] = [];
   searchTextImage: any;
+  selectedImage: any;
 
   ngOnInit() {
     this.obtenerFrases();
@@ -34,6 +35,19 @@ export class AdminPage implements OnInit {
       console.log('-------------------');
     });
   }
+  selectImage(imagen: any) {
+    this.selectedImage = imagen;
+  }
+  toggleFav(imagen: any) {
+    // Cambiar el valor de la propiedad 'fav' (alternar entre true y false)
+    imagen.fav = !imagen.fav;
+  
+    // Guardar los cambios en Firebase u otro servicio, según sea necesario
+    this.dataService.guardarDatosFoto(this.listaImagenes).subscribe(() => {
+      console.log('Cambio en la propiedad fav guardado correctamente.');
+    });
+  }
+  
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
   }

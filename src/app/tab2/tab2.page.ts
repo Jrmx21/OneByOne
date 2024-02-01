@@ -28,6 +28,7 @@ export class Tab2Page {
   isFrase: boolean = false;
   autor: string = ' no hay autor';
   isModalOpen = false;
+  autorFoto: any;
   constructor(
     private modalController: ModalController,
     private navCtrl: NavController,
@@ -39,15 +40,32 @@ export class Tab2Page {
   ngOnInit() {
     this.seleccionarFraseAleatoria();
     this.activarFrase();
-    this.dataService.obtenerFotos().subscribe((data) => {
-      this.fotos = Object.values(data) || [];
-      console.log('Fotos obtenidas: ', this.fotos);
-      console.log('-------------------');
-    }),(error:any)=> {
-      console.log(error);
-      this.presentarTostada('Error al cargar la foto', 'danger')
-    }
-    
+    let fotoHtml=   document.getElementById('foto')
+    this.dataService.obtenerFotos().subscribe(
+      (data) => {
+        this.fotos = Object.values(data) || [];
+        console.log('Fotos obtenidas: ', this.fotos);
+        console.log('-------------------');
+  
+        // Filtrar fotos donde la propiedad 'fav' sea true
+        const fotosFavoritas = this.fotos.filter(foto => foto.fav === true);
+  
+        if (fotosFavoritas.length > 0) {
+          console.log('Hay fotos favoritas:', fotosFavoritas);
+          const fotoHtml = document.getElementById('foto') as HTMLImageElement;
+          // Cambiar la URL de la imagen en el elemento HTML
+          fotoHtml.src = fotosFavoritas[0].imagen;
+          this.autorFoto=fotosFavoritas[0].autor;
+          
+        } else {
+          console.log('No hay fotos favoritas.');
+        }
+      },
+      (error: any) => {
+        console.log(error);
+        this.presentarTostada('Error al cargar la foto', 'danger');
+      }
+    );
   }
     
  
@@ -62,12 +80,7 @@ console.log("MODAL COOKASO------"+modalCookie);
       // Establecer la cookie 'modal' en 'false' para la próxima vez
       this.setCookie('modal', 'false', 365); // El tercer parámetro es la duración en días
     }
-    for (let i = 0; i < this.fotos.length; i++) {
-      
-      if (this.fotos) {
-        console.log('hay una foto favorita', [i]);
-      }
-    }
+   
   }
   apagarModal(){
     this.mostrarBienvenida=false;
@@ -147,6 +160,29 @@ console.log("MODAL COOKASO------"+modalCookie);
     setTimeout(() => {
       event.target.complete();
       this.seleccionarFraseAleatoria();
+      this.dataService.obtenerFotos().subscribe(
+        (data) => {
+          this.fotos = Object.values(data) || [];
+          console.log('Fotos obtenidas: ', this.fotos);
+          console.log('-------------------');
+    
+          // Filtrar fotos donde la propiedad 'fav' sea true
+          const fotosFavoritas = this.fotos.filter(foto => foto.fav === true);
+    
+          if (fotosFavoritas.length > 0) {
+            console.log('Hay fotos favoritas:', fotosFavoritas);
+            const fotoHtml = document.getElementById('foto') as HTMLImageElement;
+            // Cambiar la URL de la imagen en el elemento HTML
+            fotoHtml.src = fotosFavoritas[0].imagen;
+          } else {
+            console.log('No hay fotos favoritas.');
+          }
+        },
+        (error: any) => {
+          console.log(error);
+          this.presentarTostada('Error al cargar la foto', 'danger');
+        }
+      );
     }, 500);
   }
  

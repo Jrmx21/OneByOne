@@ -61,9 +61,17 @@
       <ion-content class="ion-padding">
         <!-- Agrega un campo de búsqueda -->
         <ion-searchbar [(ngModel)]="searchTextImage" placeholder="Buscar"></ion-searchbar>
-      
+  
+        <!-- Itera sobre cada imagen y muestra el botón "Toggle Fav" -->
         <ion-item *ngFor="let imagen of listaImagenes | buscarImagen: searchTextImage; let i=index">
-          <img   [src]="imagen.imagen" > ID: {{i}} - {{imagen.autor}} - ID: {{imagen.id}}
+          <img [src]="imagen.imagen" > ID: {{i}} - {{imagen.autor}} - ID: {{imagen.id}}
+          
+          <!-- Muestra si la propiedad 'fav' es true o false -->
+          <ion-badge color="success" *ngIf="imagen.fav">Fav: True</ion-badge>
+          <ion-badge color="danger" *ngIf="!imagen.fav">Fav: False</ion-badge>
+          
+          <!-- Botón para alternar la propiedad 'fav' de la imagen actual -->
+          <ion-button (click)="toggleFav(imagen)">Toggle Fav</ion-button>
         </ion-item>
       </ion-content>
       

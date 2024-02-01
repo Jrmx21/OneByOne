@@ -116,4 +116,10 @@ public obtenerFotos(){
     `https://by1-1db5a-default-rtdb.europe-west1.firebasedatabase.app/fotos_usuario.json`
   );
 }
+guardarDatosFoto(fotos: any): Observable<any> {
+  return this.http.put(
+    `https://by1-1db5a-default-rtdb.europe-west1.firebasedatabase.app/fotos_usuario.json`,
+    fotos
+  );
+}
 }
