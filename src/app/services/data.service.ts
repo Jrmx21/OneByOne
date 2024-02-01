@@ -70,13 +70,13 @@ export class DataService {
       frasesUsuario
     );
   }
-  public guardarFoto(foto: string): void {
-    const data = { imagen: foto, frase: 'Tu frase aquí' };
+  public guardarFoto(foto: string, usuario: string): void {
+    const data = { imagen: foto, autor: usuario };
   
     // Guardar la frase en una cookie con una duración de 12 horas
     this.setCookie('imagenUrl', foto, 12 / 24);
   
-    this.http.put(
+    this.http.post(
       'https://by1-1db5a-default-rtdb.europe-west1.firebasedatabase.app/fotos_usuario.json',
       data
     ).subscribe(
@@ -89,6 +89,7 @@ export class DataService {
         console.error('Error al publicar la FOTO en Firebase:', error);
       }
     );
+   
 
   // crearFrase(frase: any): Observable<any> {
   //   return this.http.post(`https://by1-1db5a-default-rtdb.europe-west1.firebasedatabase.app/frases.json`, frase);
@@ -110,5 +111,9 @@ private setCookie(name: string, value: string, days: number): void {
   const cookieValue = `${name}=${value};expires=${expirationDate.toUTCString()};path=/`;
   document.cookie = cookieValue;
 }
-
+public obtenerFotos(){
+  return this.http.get(
+    `https://by1-1db5a-default-rtdb.europe-west1.firebasedatabase.app/fotos_usuario.json`
+  );
+}
 }

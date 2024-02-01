@@ -46,6 +46,30 @@
     <ion-card-content>
       <ion-button (click)="modoAutomatico()">Modo Automático</ion-button>
     </ion-card-content>
+    <!-- MODAL -->
+    <ion-button expand="block" (click)="setOpen(true)">Fotos</ion-button>
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Foto del día</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpen(false)">Volver</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <!-- Agrega un campo de búsqueda -->
+        <ion-searchbar [(ngModel)]="searchTextImage" placeholder="Buscar"></ion-searchbar>
+      
+        <ion-item *ngFor="let imagen of listaImagenes | buscarImagen: searchTextImage; let i=index">
+          <img   [src]="imagen.imagen" > ID: {{i}} - {{imagen.autor}} - ID: {{imagen.id}}
+        </ion-item>
+      </ion-content>
+      
+      
+    </ng-template>
+  </ion-modal>
   </ion-card>
 
   <ion-card>

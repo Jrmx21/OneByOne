@@ -7,14 +7,18 @@ import { IonicModule } from '@ionic/angular';
 import { AdminPageRoutingModule } from './admin-routing.module';
 
 import { AdminPage } from './admin.page';
+import { BuscarImagenPipe } from '../pipes/buscar-imagen.pipe';
+
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AdminPageRoutingModule
+    AdminPageRoutingModule,
+    
   ],
-  declarations: [AdminPage]
+  declarations: [AdminPage,BuscarImagenPipe]
 })
 export class AdminPageModule {}

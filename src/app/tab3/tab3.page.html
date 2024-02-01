@@ -2,42 +2,94 @@
 
 <ion-header>
   <ion-toolbar color="secondary">
-    <ion-title>{{myApp}}</ion-title>
     <ion-buttons slot="end">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-title>{{ myApp }}</ion-title>
+    <ion-buttons slot="end">
+      <!-- Puedes agregar botones adicionales aquí si es necesario -->
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
-<ion-content>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title color="primary">Escribe tu frase del día</ion-card-title>
-      <ion-card-subtitle>Si tienes suerte aparecerás en la aplicación!</ion-card-subtitle>
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    Tap the button in the toolbar to open the menu.
+  </ion-content>
+  
+</div>
+<ion-content class="ion-padding">
+  <!-- Frase del día -->
+  <ion-card class="ion-margin-bottom">
+    <ion-card-header class="ion-text-center">
+      <ion-card-title class="ion-text-center" color="primary">Escribe tu frase del día</ion-card-title>
+      <ion-card-subtitle class="ion-text-center" >¡Si tienes suerte, aparecerás en la aplicación!</ion-card-subtitle>
     </ion-card-header>
-    <ion-card-content>
-      <div class="ion-text-center">
-        <ion-button (click)="mostrarIntroFraseUsuario()" size="large" color="secondary">
-          <ion-icon name="pencil-outline"></ion-icon>
-        </ion-button>
-      
-    
+    <ion-card-content class="ion-text-center">
+      <ion-button (click)="mostrarIntroFraseUsuario()" class="ion-text-center" color="secondary">
+        <ion-icon slot="start" name="pencil-outline"></ion-icon>
+        Agregar Frase
+      </ion-button>
+
       <ion-select [(ngModel)]="tipoAutor" *ngIf="showIntroUsuario" placeholder="Selecciona el tipo de autor">
-        <ion-select-option value="anonimo" >Anónimo</ion-select-option>
-        <ion-select-option value="autor" >Autor</ion-select-option>
+        <ion-select-option value="anonimo">Anónimo</ion-select-option>
+        <ion-select-option value="autor">Autor</ion-select-option>
       </ion-select>
-    
-      <ion-input label="Frase usuario" labelPlacement="floating" *ngIf="showIntroUsuario" color="primary"
-        [(ngModel)]="frase" placeholder="Introduce tu frase diaria"></ion-input>
-    
-      <ion-input label="Autor usuario" labelPlacement="floating" *ngIf="showIntroUsuario && tipoAutor === 'autor'" color="primary"
+
+      <ion-input label="Frase usuario" *ngIf="showIntroUsuario" color="primary" [(ngModel)]="frase"
+        placeholder="Introduce tu frase diaria"></ion-input>
+
+      <ion-input label="Autor usuario" *ngIf="showIntroUsuario && tipoAutor === 'autor'" color="primary"
         [(ngModel)]="autor" placeholder="Introduce tu nombre"></ion-input>
 
-      <ion-button *ngIf="showIntroUsuario" (click)="publicarFrase()" color="secondary">Enviar al ADMIN</ion-button>
-    </div>
+      <ion-button *ngIf="showIntroUsuario" (click)="publicarFrase()"   expand="full" color="secondary">
+        Enviar al ADMIN
+      </ion-button>
     </ion-card-content>
-    
   </ion-card>
-  
-</ion-content>
 
+<!-- Foto del día -->
+<ion-card *ngIf="puedePublicarFoto">
+  <ion-card-header class="ion-text-center">
+    <ion-card-title class="ion-text-center" color="primary">Foto del día</ion-card-title>
+    <ion-card-subtitle class="ion-text-center">¡Si tienes suerte, aparecerás en la aplicación!</ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content class="ion-text-center">
+    <ion-select [(ngModel)]="tipoAutorFoto" placeholder="Selecciona el tipo de autor">
+      <ion-select-option value="anonimo">Anónimo</ion-select-option>
+      <ion-select-option value="autor">Autor</ion-select-option>
+    </ion-select>
+
+    <ion-input label="Autor usuario" color="primary" *ngIf="tipoAutorFoto === 'autor'"
+      [(ngModel)]="autorFoto" placeholder="Introduce tu nombre"></ion-input>
+
+    <ion-button *ngIf="mostrarFoto" (click)="takePicture()" color="success" expand="full">
+      <ion-icon slot="start" name="camera"></ion-icon>
+      Tomar Foto
+    </ion-button>
+
+    <!-- La imagen capturada se mostrará aquí -->
+    <img id="capturedImage" [src]="fotoUrl" (click)="mostrarFoto ? takePicture() : null">
+    <ion-card-subtitle class="ion-text-center" *ngIf="!mostrarFoto">Haz click en la imagen para cambiarla</ion-card-subtitle>
+
+    <ion-button *ngIf="!mostrarFoto" (click)="savePhoto(fotoUrl);" routerDirection="" expand="full" color="secondary">
+      Enviar al ADMIN
+    </ion-button>
+  </ion-card-content>
+</ion-card>
+<ion-card  style="padding: 4%;" *ngIf="!puedePublicarFoto">
+  <ion-title  class="ion-text-center"color="secondary">Foto publicada</ion-title>
+  <ion-card-subtitle  class="ion-text-center" >¡Gracias por compartir tu foto!</ion-card-subtitle>
+  <ion-card-content>
+    <!-- AUN NO HE PODIDO GUARDARLO EN COOKIE -->
+    <!-- <img [src]="fotoPublicadaUrl"> -->
+    Debe esperar 4 horas para poder publicar otra foto
+  </ion-card-content>
+</ion-card>
+</ion-content>

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MessagingService } from './services/messaging.service';
 
 @Component({
   selector: 'app-root',
@@ -7,11 +6,11 @@ import { MessagingService } from './services/messaging.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  message: any;
-  constructor( private messagingService:MessagingService) {}
-  ngOnInit() {
-    this.messagingService.requestPermission();
-    this.messagingService.receiveMessage();
-    this.message = this.messagingService.currentMessage;
-  }
+  // message: any;
+  // constructor( private messagingService:MessagingService) {}
+  // ngOnInit() {
+  //   this.messagingService.requestPermission();
+  //   this.messagingService.receiveMessage();
+  //   this.message = this.messagingService.currentMessage;
+  // }
 }

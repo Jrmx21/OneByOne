@@ -18,10 +18,9 @@ import { CookieService } from 'ngx-cookie-service';
 export class Tab2Page {
   //TITULO APP hay que ponerlo global
   public myApp: string = 'OneByOne';
-
   //FRASE QUE SE MUESTRA
   frase: string = '';
-
+  fotos: any[] = [];
   //DEMÁS VARIABLES
   fraseIdInput: number = 1;
   responseData: any;
@@ -29,29 +28,26 @@ export class Tab2Page {
   isFrase: boolean = false;
   autor: string = ' no hay autor';
   isModalOpen = false;
-  fotoUrl: string | null = '';
   constructor(
     private modalController: ModalController,
     private navCtrl: NavController,
     private dataService: DataService,
-    private authService: AuthService,
-    private router: Router,
     private toastController: ToastController,
-    private cookieService: CookieService
+
     
   ) {}
   ngOnInit() {
     this.seleccionarFraseAleatoria();
     this.activarFrase();
-    this.dataService.guardarDatos(this.frase).subscribe((data) => {
-      console.log(data);
-    });
-    defineCustomElements(window);
-    if (environment.production) {
-      enableProdMode();
+    this.dataService.obtenerFotos().subscribe((data) => {
+      this.fotos = Object.values(data) || [];
+      console.log('Fotos obtenidas: ', this.fotos);
+      console.log('-------------------');
+    }),(error:any)=> {
+      console.log(error);
+      this.presentarTostada('Error al cargar la foto', 'danger')
     }
-    this.fotoUrl = this.getCookie('fotoUrl')
-    console.log(this.fotoUrl ,"ESTA ES LA FOTO URL");
+    
   }
     
  
@@ -61,12 +57,21 @@ export class Tab2Page {
 console.log("MODAL COOKASO------"+modalCookie);
     if (modalCookie == 'false') {
       this.mostrarBienvenida = false;
-    } else {
-      this.mostrarBienvenida = true;
+    } else if(modalCookie == 'true') {
       console.log(this.mostrarBienvenida+"ESTA ES LA BIENVENIDA");
       // Establecer la cookie 'modal' en 'false' para la próxima vez
       this.setCookie('modal', 'false', 365); // El tercer parámetro es la duración en días
     }
+    for (let i = 0; i < this.fotos.length; i++) {
+      
+      if (this.fotos) {
+        console.log('hay una foto favorita', [i]);
+      }
+    }
+  }
+  apagarModal(){
+    this.mostrarBienvenida=false;
+    this.setCookie('modal', 'false', 365);
   }
   private setCookie(name: string, value: string, days: number): void {
     const expirationDate = new Date();
@@ -124,7 +129,6 @@ console.log("MODAL COOKASO------"+modalCookie);
         this.dataService.obtenerFrasesDelDia().subscribe((data) => {
           let frases: any = Object.values(data);
           let indiceAleatorio = Math.floor(Math.random() * frases.length);
-          // Obtener la frase y el autor en base al índice aleatorio.
           this.frase = frases[indiceAleatorio].frase;
           this.autor = frases[indiceAleatorio].autor;
         });
@@ -135,10 +139,6 @@ console.log("MODAL COOKASO------"+modalCookie);
     }, 500);
   }
 
-  //  NO FUNCIONA
-  redireccionarOtraPagina() {
-    this.navCtrl.navigateForward('/tabs/tab3');
-  }
   //MUESTRA BIENVENIDA AL ENTRAR
   ionViewDidEnter() {
     this.mostrarBienvenida = true;
@@ -149,22 +149,7 @@ console.log("MODAL COOKASO------"+modalCookie);
       this.seleccionarFraseAleatoria();
     }, 500);
   }
-   takePicture = async () => {
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.Base64
-    });
-    console.log(image);
-
-    this.savePhoto(image.base64String!);
-  
-    // Can be set to the src of an image now
-    // imageElement.src = imageUrl;
-  };
-  savePhoto(photo:string){
-    this.dataService.guardarFoto(photo)
-  }
+ 
   async presentarTostada(message: string, color: string) {
     const toast = await this.toastController.create({
       message: message,

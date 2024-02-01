@@ -6,3 +6,7 @@ export interface UserI{
     password: string;
     perfil: 'admin' | 'user';
 }
+export interface Foto{
+    fotoUrl: string;
+    autor: string;
+}

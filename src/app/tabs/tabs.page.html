@@ -5,15 +5,11 @@
     </ion-toolbar>
   </ion-header>
   <ion-content class="ion-padding">
-
     <ion-list [inset]="true">
       <ion-item>
         <ion-toggle [(ngModel)]="themeToggle" (ionChange)="toggleChange($event)" justify="space-between"
           >Modo Oscuro</ion-toggle
-        >
-        <ion-button routerLink="/register">Sign Up</ion-button>
-        <ion-button routerLink="/login">Sign IN</ion-button>
-        
+        >        
       </ion-item>
     </ion-list>
     <ion-button href="/admin">ADMIN</ion-button>

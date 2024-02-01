@@ -16,12 +16,15 @@ import { environment } from 'src/environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { AuthGuard } from '@angular/fire/auth-guard';
+import { CookieService } from 'ngx-cookie-service';
+
+
 
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [ReactiveFormsModule,AngularFireModule.initializeApp(environment.firebase), BrowserModule, IonicModule.forRoot(), AngularFireAuthModule, AppRoutingModule, HttpClientModule,FormsModule, provideAuth(() => getAuth()),],
-  providers: [AuthGuard,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },DataService,AuthService],
+  imports: [ReactiveFormsModule,AngularFireModule.initializeApp(environment.firebase), BrowserModule, IonicModule.forRoot(), AngularFireAuthModule, AppRoutingModule, HttpClientModule,FormsModule],
+  providers: [CookieService,AuthGuard,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },DataService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

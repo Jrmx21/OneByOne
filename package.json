@@ -37,6 +37,7 @@
     "express": "^4.18.2",
     "firebase": "^10.7.2",
     "firebase-tools": "^12.9.1",
+    "ionic-img-viewer": "^2.9.0",
     "ionicons": "^7.0.0",
     "mysql2": "^3.6.3",
     "ngx-cookie-service": "^16.1.0",

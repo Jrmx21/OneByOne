@@ -5,6 +5,8 @@ import { EdicionFraseModalPage } from '../modals/edicion-frase-modal/edicion-fra
 import { AuthService } from '../services/auth.service';
 import { LowerCasePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { BuscarImagenPipe } from '../pipes/buscar-imagen.pipe';
+
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.page.html',
@@ -18,14 +20,29 @@ export class AdminPage implements OnInit {
   textoBusqueda: string = '';
   fechaBusqueda: string = '';
   frasesDelDia: any[] = [];
+  isModalOpen = false;
+  listaImagenes: any[] = [];
+  searchTextImage: any;
 
+  ngOnInit() {
+    this.obtenerFrases();
+    this.obtenerFrasesUsuario();
+    this.obtenerFrasesDelDia();
+    this.dataService.obtenerFotos().subscribe((data) => {
+      this.listaImagenes = Object.values(data) || [];
+      console.log('Frases obtenidas: ', this.listaImagenes);
+      console.log('-------------------');
+    });
+  }
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
+  }
   constructor(
     private dataService: DataService,
     private navCtrl: NavController,
     private modalController: ModalController,
     private auth: AuthService,
-    private router: Router
-  ) {}
+    private router: Router  ) {}
   tipoBusqueda: 'id' | 'fecha' | 'autor' | 'frase' = 'id';
   private filtrarPorFecha(lista: any[]): any[] {
     // Implementa la lógica de filtrado por fecha aquí
@@ -50,48 +67,47 @@ export class AdminPage implements OnInit {
       this.frasesUsuario = this.filtrarPorCampo(this.frasesUsuario, filtro);
     }
   }
-  ngOnInit() {
-    this.obtenerFrases();
-    this.obtenerFrasesUsuario();
-    this.obtenerFrasesDelDia();
-  }
+
   obtenerFrasesDelDia() {
     this.dataService.obtenerFrasesDelDia().subscribe((data) => {
       this.frasesDelDia = Object.values(data) || [];
     });
   }
-  
+
   moverAFrasesDelDia(index: number) {
     if (index >= 0 && index < this.frases.length) {
       const fraseMovida = this.frases.splice(index, 1)[0];
-      this.frasesDelDia.push({ ...fraseMovida, fecha: new Date().toISOString() }); // Agrega la fecha actual
+      this.frasesDelDia.push({
+        ...fraseMovida,
+        fecha: new Date().toISOString(),
+      }); // Agrega la fecha actual
       this.guardarFrasesYUsuarioYDelDia();
     }
   }
   // admin.page.ts
 
-moverAFrasesDesdeDelDia(index: number) {
-  if (index >= 0 && index < this.frasesDelDia.length) {
-    const fraseMovida = this.frasesDelDia.splice(index, 1)[0];
-    this.frases.push({ ...fraseMovida, fecha: new Date().toISOString() }); // Agrega la fecha actual
-    this.guardarFrasesYUsuarioYDelDia();
+  moverAFrasesDesdeDelDia(index: number) {
+    if (index >= 0 && index < this.frasesDelDia.length) {
+      const fraseMovida = this.frasesDelDia.splice(index, 1)[0];
+      this.frases.push({ ...fraseMovida, fecha: new Date().toISOString() }); // Agrega la fecha actual
+      this.guardarFrasesYUsuarioYDelDia();
+    }
   }
-}
-// admin.page.ts
- // Nueva propiedad para almacenar el texto de búsqueda
- searchText: string = '';
+  // admin.page.ts
+  // Nueva propiedad para almacenar el texto de búsqueda
+  searchText: string = '';
 
- filtrarFrases(lista: any[]): any[] {
-  const lowerCasePipe = new LowerCasePipe();
-  const filtro = lowerCasePipe.transform(this.searchText);
+  filtrarFrases(lista: any[]): any[] {
+    const lowerCasePipe = new LowerCasePipe();
+    const filtro = lowerCasePipe.transform(this.searchText);
 
-  // Filtrar frases según el texto de búsqueda
-  return lista.filter(
-    (frase) =>
-      lowerCasePipe.transform(frase.frase).includes(filtro) ||
-      lowerCasePipe.transform(frase.autor).includes(filtro)
-  );
-}
+    // Filtrar frases según el texto de búsqueda
+    return lista.filter(
+      (frase) =>
+        lowerCasePipe.transform(frase.frase).includes(filtro) ||
+        lowerCasePipe.transform(frase.autor).includes(filtro)
+    );
+  }
 
   moverAFrasesUsuarioDesdeDelDia(index: number) {
     if (index >= 0 && index < this.frasesDelDia.length) {
@@ -100,17 +116,21 @@ moverAFrasesDesdeDelDia(index: number) {
       this.guardarFrasesYUsuarioYDelDia();
     }
   }
-  
+
   private guardarFrasesYUsuarioYDelDia() {
     this.dataService.guardarDatos(this.frases).subscribe(() => {
-      this.dataService.guardarFrasesUsuario(this.frasesUsuario).subscribe(() => {
-        this.dataService.guardarFrasesDelDia(this.frasesDelDia).subscribe(() => {
-          // Puedes realizar acciones adicionales después de guardar los datos si es necesario
+      this.dataService
+        .guardarFrasesUsuario(this.frasesUsuario)
+        .subscribe(() => {
+          this.dataService
+            .guardarFrasesDelDia(this.frasesDelDia)
+            .subscribe(() => {
+              // Puedes realizar acciones adicionales después de guardar los datos si es necesario
+            });
         });
-      });
     });
   }
-  
+
   obtenerFrases() {
     this.dataService.obtenerFrasesFirebase().subscribe((data) => {
       this.frases = Object.values(data) || [];
@@ -132,25 +152,27 @@ moverAFrasesDesdeDelDia(index: number) {
     if (this.frasesDelDia.length < this.frases.length) {
       // Seleccionar una frase aleatoria que no esté en frasesDelDia
       const frasesDisponibles = this.frases.filter(
-        frase => !this.frasesDelDia.some(fd => fd.frase === frase.frase)
+        (frase) => !this.frasesDelDia.some((fd) => fd.frase === frase.frase)
       );
-  
+
       if (frasesDisponibles.length > 0) {
-        const indexAleatorio = Math.floor(Math.random() * frasesDisponibles.length);
+        const indexAleatorio = Math.floor(
+          Math.random() * frasesDisponibles.length
+        );
         const fraseAleatoria = frasesDisponibles[indexAleatorio];
-  
+
         // Agregar la frase del día
         this.frasesDelDia.push({
           ...fraseAleatoria,
           fecha: new Date().toISOString(),
         });
-  
+
         // Agregar la frase usada
         this.frasesUsuario.push({
           ...fraseAleatoria,
           fecha: new Date().toISOString(),
         });
-  
+
         // Guardar los cambios
         this.guardarFrasesYUsuarioYDelDia();
       } else {
@@ -160,25 +182,29 @@ moverAFrasesDesdeDelDia(index: number) {
       console.log('Todas las frases ya están en frasesDelDia.');
     }
   }
-  actualizarFrase(index: number, fraseActualizada: any, esFrasesUsuario: boolean = false) {
+  actualizarFrase(
+    index: number,
+    fraseActualizada: any,
+    esFrasesUsuario: boolean = false
+  ) {
     // Seleccionar la lista correspondiente según el parámetro esFrasesUsuario
     const lista = esFrasesUsuario ? this.frasesUsuario : this.frases;
-  
+
     if (index >= 0 && index < lista.length) {
       lista[index] = { ...lista[index], ...fraseActualizada };
-  
+
       // Guardar las frases según la lista correspondiente
       esFrasesUsuario ? this.guardarFrasesYUsuario() : this.guardarFrases();
     }
   }
   abrirFormularioEdicion(index: number, esFrasesUsuario: boolean = false) {
     console.log('Index: ', index);
-  
+
     // Seleccionar la lista correspondiente según el parámetro esFrasesUsuario
     const lista = esFrasesUsuario ? this.frasesUsuario : this.frases;
-  
+
     const fraseSeleccionada = lista[index];
-  
+
     if (fraseSeleccionada) {
       this.modalController
         .create({
