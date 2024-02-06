@@ -64,7 +64,7 @@
   
         <!-- Itera sobre cada imagen y muestra el botón "Toggle Fav" -->
         <ion-item *ngFor="let imagen of listaImagenes | buscarImagen: searchTextImage; let i=index">
-          <img [src]="imagen.imagen" > ID: {{i}} - {{imagen.autor}} - ID: {{imagen.id}}
+          <img [src]="imagen.imagen" > ID: {{i}} - {{imagen.autor}}
           
           <!-- Muestra si la propiedad 'fav' es true o false -->
           <ion-badge color="success" *ngIf="imagen.fav">Fav: True</ion-badge>

@@ -9,6 +9,7 @@ import { Camera, CameraResultType } from '@capacitor/camera';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
+import { Foto } from '../models';
 
 @Component({
   selector: 'app-tab2',
@@ -20,7 +21,7 @@ export class Tab2Page {
   public myApp: string = 'OneByOne';
   //FRASE QUE SE MUESTRA
   frase: string = '';
-  fotos: any[] = [];
+  fotos: Foto[] = [];
   //DEMÁS VARIABLES
   fraseIdInput: number = 1;
   responseData: any;
@@ -28,35 +29,34 @@ export class Tab2Page {
   isFrase: boolean = false;
   autor: string = ' no hay autor';
   isModalOpen = false;
-  autorFoto: any;
+  autorFoto: string = 'autor';
+  modalBienvenida: boolean = true;
+
   constructor(
     private modalController: ModalController,
     private navCtrl: NavController,
     private dataService: DataService,
-    private toastController: ToastController,
-
-    
+    private toastController: ToastController
   ) {}
   ngOnInit() {
     this.seleccionarFraseAleatoria();
     this.activarFrase();
-    let fotoHtml=   document.getElementById('foto')
-    this.dataService.obtenerFotos().subscribe(
+    let fotoHtml = document.getElementById('foto');
+    this.dataService.obtenerFotosFavoritas().subscribe(
       (data) => {
         this.fotos = Object.values(data) || [];
         console.log('Fotos obtenidas: ', this.fotos);
         console.log('-------------------');
-  
+
         // Filtrar fotos donde la propiedad 'fav' sea true
-        const fotosFavoritas = this.fotos.filter(foto => foto.fav === true);
-  
+        const fotosFavoritas = this.fotos.filter((foto) => foto.fav === true);
+
         if (fotosFavoritas.length > 0) {
           console.log('Hay fotos favoritas:', fotosFavoritas);
           const fotoHtml = document.getElementById('foto') as HTMLImageElement;
           // Cambiar la URL de la imagen en el elemento HTML
           fotoHtml.src = fotosFavoritas[0].imagen;
-          this.autorFoto=fotosFavoritas[0].autor;
-          
+          this.autorFoto = fotosFavoritas[0].autor;
         } else {
           console.log('No hay fotos favoritas.');
         }
@@ -66,26 +66,27 @@ export class Tab2Page {
         this.presentarTostada('Error al cargar la foto', 'danger');
       }
     );
-  }
-    
- 
-  ionViewWillEnter() {
-    // Verificar si la cookie 'modal' está presente
     const modalCookie = this.getCookie('modal');
-console.log("MODAL COOKASO------"+modalCookie);
-    if (modalCookie == 'false') {
-      this.mostrarBienvenida = false;
-    } else if(modalCookie == 'true') {
-      console.log(this.mostrarBienvenida+"ESTA ES LA BIENVENIDA");
-      // Establecer la cookie 'modal' en 'false' para la próxima vez
+    console.log('MODAL COOKASO------' + modalCookie);
+    if (modalCookie == 'true') {
+      this.modalBienvenida = true;
+    } else if (modalCookie == 'false') {
+      this.modalBienvenida = false;
       this.setCookie('modal', 'false', 365); // El tercer parámetro es la duración en días
     }
-   
   }
-  apagarModal(){
-    this.mostrarBienvenida=false;
+
+  //Se hace al entrar
+  ionViewWillEnter() {
+    // Verificar si la cookie 'modal' está presente
+ 
+  }
+  //APAGAR MODAL
+  apagarModal() {
+    this.mostrarBienvenida = false;
     this.setCookie('modal', 'false', 365);
   }
+  // set COOKIES
   private setCookie(name: string, value: string, days: number): void {
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + days);
@@ -93,7 +94,11 @@ console.log("MODAL COOKASO------"+modalCookie);
     const cookieValue = `${name}=${value};expires=${expirationDate.toUTCString()};path=/`;
     document.cookie = cookieValue;
   }
-
+  //cookie para modal
+  public setCookieModal() {
+    this.setCookie('modal', 'false', 365);
+  }
+  // get COOKIES
   private getCookie(name: string): string | null {
     const cookies = document.cookie.split(';');
 
@@ -108,24 +113,7 @@ console.log("MODAL COOKASO------"+modalCookie);
     return null;
   }
 
-
-  // async moverFrase() {
-  //   if (!this.fraseIdInput) {
-  //     console.error('Por favor, ingrese una ID válida');
-  //     return;
-  //   }
-
-  // //   this.dataService.moverFrase(this.fraseIdInput).subscribe(
-  // //     (response) => {
-  // //       console.log('Frase movida exitosamente', response);
-  // //       // Puedes manejar la respuesta según tus necesidades
-  // //     },
-  // //     (error) => {
-  // //       console.error('Error al mover la frase', error);
-  // //       // Puedes manejar el error según tus necesidades
-  // //     }
-  // //   );
-  // }
+  //Botón SHARE
   compartir() {
     Share.share({
       title: '¡Mira esta frase!',
@@ -136,19 +124,20 @@ console.log("MODAL COOKASO------"+modalCookie);
     });
   }
 
+  // Selecciona una frase aleatoria de las que hay en la tabla frases_del_dia
   seleccionarFraseAleatoria() {
     this.frase = '';
     setTimeout(() => {
-        this.dataService.obtenerFrasesDelDia().subscribe((data) => {
-          let frases: any = Object.values(data);
-          let indiceAleatorio = Math.floor(Math.random() * frases.length);
-          this.frase = frases[indiceAleatorio].frase;
-          this.autor = frases[indiceAleatorio].autor;
-        });
-     (error:any)=> {
+      this.dataService.obtenerFrasesDelDia().subscribe((data) => {
+        let frases: any = Object.values(data);
+        let indiceAleatorio = Math.floor(Math.random() * frases.length);
+        this.frase = frases[indiceAleatorio].frase;
+        this.autor = frases[indiceAleatorio].autor;
+      });
+      (error: any) => {
         console.log(error);
-        this.presentarTostada('Error al cargar la frase', 'danger')
-      }
+        this.presentarTostada('Error al cargar la frase', 'danger');
+      };
     }, 500);
   }
 
@@ -156,22 +145,26 @@ console.log("MODAL COOKASO------"+modalCookie);
   ionViewDidEnter() {
     this.mostrarBienvenida = true;
   }
+
   handleRefresh(event: any) {
+    //Refresher
     setTimeout(() => {
       event.target.complete();
       this.seleccionarFraseAleatoria();
-      this.dataService.obtenerFotos().subscribe(
+      this.dataService.obtenerFotosFavoritas().subscribe(
         (data) => {
           this.fotos = Object.values(data) || [];
           console.log('Fotos obtenidas: ', this.fotos);
           console.log('-------------------');
-    
+
           // Filtrar fotos donde la propiedad 'fav' sea true
-          const fotosFavoritas = this.fotos.filter(foto => foto.fav === true);
-    
+          const fotosFavoritas = this.fotos.filter((foto) => foto.fav === true);
+
           if (fotosFavoritas.length > 0) {
             console.log('Hay fotos favoritas:', fotosFavoritas);
-            const fotoHtml = document.getElementById('foto') as HTMLImageElement;
+            const fotoHtml = document.getElementById(
+              'foto'
+            ) as HTMLImageElement;
             // Cambiar la URL de la imagen en el elemento HTML
             fotoHtml.src = fotosFavoritas[0].imagen;
           } else {
@@ -185,8 +178,9 @@ console.log("MODAL COOKASO------"+modalCookie);
       );
     }, 500);
   }
- 
+
   async presentarTostada(message: string, color: string) {
+    //TOSTADA CON PARAMETROS
     const toast = await this.toastController.create({
       message: message,
       duration: 1000,
@@ -210,30 +204,4 @@ console.log("MODAL COOKASO------"+modalCookie);
     console.log('Frase desactivada');
     this.isFrase = false; //DEJA DE MOSTRAR LA FRASE
   }
-
-  // onClick() {
-  //   this.authService
-  //     .logout()
-  //     .then(() => {
-  //       this.router.navigate(['/login']);
-  //     })
-  //     .catch(async (error:any) => {
-  //       const toast = await this.toastController.create({
-  //         message: error.message,
-  //         duration: 2000,
-  //       });
-  //       toast.present();
-  //     });
-  // }
 }
-//XXX NO FUNCIONAL DEMOMENTO XXX
-// handleRefresh(event: any) {
-//   setTimeout(() => {
-//     //  QUE HACER CUANDO RECARGA
-//     this.isFrase = false;
-//     this.isFrase = true;
-//     event.target.complete();
-//   }, 2000);
-// }
-
-// PA TODO EL MUNDO NO ES LA MISMA FRASE DEL DIA A CADA UNO LE SALE UNA DIFERENTE IDEA

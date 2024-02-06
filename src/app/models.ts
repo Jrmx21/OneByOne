@@ -7,6 +7,8 @@ export interface UserI{
     perfil: 'admin' | 'user';
 }
 export interface Foto{
-    fotoUrl: string;
     autor: string;
+    imagen: string;
+    fav: boolean | undefined;
+    fechaSubida: string;
 }

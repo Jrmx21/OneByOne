@@ -1,7 +1,7 @@
 <!-- Modal de BIENVENIDA -->
 
 
-<!-- <ion-modal [isOpen]="mostrarBienvenida">
+<ion-modal *ngIf="modalBienvenida" [isOpen]="mostrarBienvenida">
   <ng-template>
     <ion-header>
       <ion-toolbar color="secondary">
@@ -19,7 +19,7 @@
         segundos.
       </p>
       <h5>Aplicacion hecha por ruizz02</h5>
-      <ion-button (click)="mostrarBienvenida = false; " color="secondary"
+      <ion-button (click)="modalBienvenida = false;setCookieModal()  " color="secondary"
         >Cerrar</ion-button
       >
       <ion-button href="https://www.google.com/" color="success"
@@ -27,7 +27,7 @@
       >
     </ion-content>
   </ng-template>
-</ion-modal> -->
+</ion-modal>
 
 <!-- ADMIN MENU 0.1 -->
 

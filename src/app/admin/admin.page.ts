@@ -24,7 +24,14 @@ export class AdminPage implements OnInit {
   listaImagenes: any[] = [];
   searchTextImage: any;
   selectedImage: any;
-
+  tipoBusqueda: 'id' | 'fecha' | 'autor' | 'frase' = 'id';
+    constructor(
+    private dataService: DataService,
+    private navCtrl: NavController,
+    private modalController: ModalController,
+    private auth: AuthService,
+    private router: Router
+  ) {}
   ngOnInit() {
     this.obtenerFrases();
     this.obtenerFrasesUsuario();
@@ -41,23 +48,17 @@ export class AdminPage implements OnInit {
   toggleFav(imagen: any) {
     // Cambiar el valor de la propiedad 'fav' (alternar entre true y false)
     imagen.fav = !imagen.fav;
-  
+
     // Guardar los cambios en Firebase u otro servicio, según sea necesario
     this.dataService.guardarDatosFoto(this.listaImagenes).subscribe(() => {
       console.log('Cambio en la propiedad fav guardado correctamente.');
     });
   }
-  
+
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
   }
-  constructor(
-    private dataService: DataService,
-    private navCtrl: NavController,
-    private modalController: ModalController,
-    private auth: AuthService,
-    private router: Router  ) {}
-  tipoBusqueda: 'id' | 'fecha' | 'autor' | 'frase' = 'id';
+  
   private filtrarPorFecha(lista: any[]): any[] {
     // Implementa la lógica de filtrado por fecha aquí
     // Puedes usar this.fechaBusqueda para obtener la fecha seleccionada
