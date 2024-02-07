@@ -1,34 +1,22 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Foto } from '../models';
 
 @Pipe({
   name: 'buscarImagen'
 })
 export class BuscarImagenPipe implements PipeTransform {
-  transform(imagenes: any[] | null, searchText: string): any[] | null {
-    if (!imagenes || !searchText) {
-      return imagenes;
+  transform(listaImagenes: any[], searchText: string): any[] {
+    if (!listaImagenes || !searchText) {
+      return listaImagenes;
     }
 
     searchText = searchText.toLowerCase();
 
-    return imagenes.filter((imagen, index) => {
-      // Verifica que las propiedades esperadas estén definidas
-      if (imagen && imagen.autor && imagen.imagen) {
-        const fechaSubida =
-          imagen.fechaSubida && typeof imagen.fechaSubida === 'string'
-            ? imagen.fechaSubida.toLowerCase()
-            : '';
+    return listaImagenes.filter(imagen => {
+      // Puedes ajustar los campos que deseas incluir en la búsqueda
+      const autorMatch = imagen.autor.toLowerCase().includes(searchText);
+      const favMatch = imagen.fav.toString().toLowerCase().includes(searchText);
 
-        return (
-          imagen.autor.toLowerCase().includes(searchText) ||
-          imagen.imagen.toLowerCase().includes(searchText) ||
-          fechaSubida.includes(searchText) ||
-          index.toString().includes(searchText)
-        );
-      } else {
-        return false;  // Evitar errores si alguna propiedad falta
-      }
-    }) as any[];
+      return autorMatch || favMatch;
+    });
   }
 }

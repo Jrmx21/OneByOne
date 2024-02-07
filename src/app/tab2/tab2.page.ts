@@ -31,7 +31,7 @@ export class Tab2Page {
   isModalOpen = false;
   autorFoto: string = 'autor';
   modalBienvenida: boolean = true;
-
+  fotoUrl: string = '';
   constructor(
     private modalController: ModalController,
     private navCtrl: NavController,
@@ -56,6 +56,7 @@ export class Tab2Page {
           const fotoHtml = document.getElementById('foto') as HTMLImageElement;
           // Cambiar la URL de la imagen en el elemento HTML
           fotoHtml.src = fotosFavoritas[0].imagen;
+          this.fotoUrl= fotosFavoritas[0].imagen;
           this.autorFoto = fotosFavoritas[0].autor;
         } else {
           console.log('No hay fotos favoritas.');
@@ -73,9 +74,14 @@ export class Tab2Page {
     } else if (modalCookie == 'false') {
       this.modalBienvenida = false;
       this.setCookie('modal', 'false', 365); // El tercer parámetro es la duración en días
+    
     }
+
   }
 
+  visualizarFoto(){
+
+  }
   //Se hace al entrar
   ionViewWillEnter() {
     // Verificar si la cookie 'modal' está presente
@@ -204,4 +210,5 @@ export class Tab2Page {
     console.log('Frase desactivada');
     this.isFrase = false; //DEJA DE MOSTRAR LA FRASE
   }
+
 }

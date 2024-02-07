@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { DataService } from '../services/data.service';
 import { ToastController } from '@ionic/angular';
 import { TabsPage } from '../tabs/tabs.page';
-import { Camera, CameraResultType } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -66,6 +66,7 @@ export class Tab3Page {
         quality: 90,
         allowEditing: false,
         resultType: CameraResultType.DataUrl,
+        source: CameraSource.Camera,
       });
       this.fotoUrl = image.dataUrl!;
       const imageElement = document.getElementById(
