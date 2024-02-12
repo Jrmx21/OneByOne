@@ -48,36 +48,47 @@
     </ion-card-content>
     <!-- MODAL -->
     <ion-button expand="block" (click)="setOpen(true)">Fotos</ion-button>
-  <ion-modal [isOpen]="isModalOpen">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Foto del día</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="setOpen(false)">Volver</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <!-- Agrega un campo de búsqueda -->
-        <ion-searchbar [(ngModel)]="searchTextImage" placeholder="Buscar"></ion-searchbar>
-  
-        <!-- Itera sobre cada imagen y muestra el botón "Toggle Fav" -->
-        <ion-item *ngFor="let imagen of listaImagenes | buscarImagen: searchTextImage; let i=index">
-          <img [src]="imagen.imagen" > ID: {{i}} - {{imagen.autor}}
-          
-          <!-- Muestra si la propiedad 'fav' es true o false -->
-          <ion-badge color="success" *ngIf="imagen.fav">Fav: True</ion-badge>
-          <ion-badge color="danger" *ngIf="!imagen.fav">Fav: False</ion-badge>
-          
-          <!-- Botón para alternar la propiedad 'fav' de la imagen actual -->
-          <ion-button (click)="toggleFav(imagen)">Toggle Fav</ion-button>
-        </ion-item>
-      </ion-content>
-      
-      
-    </ng-template>
-  </ion-modal>
+    <ion-modal [isOpen]="isModalOpen">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Foto del día</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="setOpen(false)">Volver</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <!-- Agrega un campo de búsqueda -->
+          <ion-searchbar
+            [(ngModel)]="searchTextImage"
+            placeholder="Buscar"
+          ></ion-searchbar>
+
+          <!-- Itera sobre cada imagen y muestra el botón "Toggle Fav" -->
+          <ion-item
+            *ngFor="let imagen of listaImagenes | buscarImagen: searchTextImage; let i=index"
+            class="listaImagenes"
+          >
+            <div class="imagen">
+              <img [src]="imagen.imagen" /> ID: {{i}} - {{imagen.autor}}
+            </div>
+            <div class="opcionesImagen">
+              <!-- Muestra si la propiedad 'fav' es true o false -->
+              <ion-badge color="success" *ngIf="imagen.fav"
+                >Fav: True</ion-badge
+              >
+              <ion-badge color="danger" *ngIf="!imagen.fav"
+                >Fav: False</ion-badge
+              >
+
+              <!-- Botón para alternar la propiedad 'fav' de la imagen actual -->
+              <ion-button (click)="toggleFav(imagen)">Toggle Fav</ion-button>
+            </div>
+          </ion-item>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
   </ion-card>
 
   <ion-card>
@@ -116,16 +127,25 @@
     <ion-list>
       <!-- Utilizar *ngFor con la función filtrarFrases() -->
       <ion-item *ngFor="let frase of filtrarFrases(frases); let i=index">
-        {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
-        <br>
-        <ion-button (click)="abrirFormularioEdicion(i)">Actualizar</ion-button>
-        <ion-button (click)="eliminarFrase(i)">Eliminar</ion-button>
-        <ion-button (click)="moverAFrasesUsuario(i)"
-          >Mover a Frases Usuario</ion-button
-        >
-        <ion-button color="success" (click)="moverAFrasesDelDia(i)"
-          ><ion-icon name="flag-outline"></ion-icon
-        ></ion-button>
+        <div class="item">
+          <div class="frases">
+            {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
+          </div>
+          <div class="frases_opcion">
+            <ion-button (click)="abrirFormularioEdicion(i)" color="tertiary"
+              >Actualizar</ion-button
+            >
+            <ion-button (click)="eliminarFrase(i)" color="danger"
+              >Eliminar</ion-button
+            >
+            <ion-button (click)="moverAFrasesUsuario(i)" color="primary"
+              >Mover a Frases Usuario</ion-button
+            >
+            <ion-button color="success" (click)="moverAFrasesDelDia(i)"
+              ><ion-icon name="flag-outline"></ion-icon
+            ></ion-button>
+          </div>
+        </div>
       </ion-item>
     </ion-list>
   </ion-card>
@@ -136,14 +156,22 @@
     <ion-list>
       <!-- Utilizar *ngFor con la función filtrarFrases() -->
       <ion-item *ngFor="let frase of filtrarFrases(frasesUsuario); let i=index">
-        {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
-        <br>
-        <ion-button
-          (click)="abrirFormularioEdicion(i, campoBusqueda === 'frases_usuario')"
-          >Actualizar</ion-button
-        >
-        <ion-button (click)="eliminarFraseUsuario(i)">Eliminar</ion-button>
-        <ion-button (click)="moverAFrases(i)">Mover a Frases</ion-button>
+        <div class="item">
+          <div class="frases_usuario">
+            {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
+          </div>
+          <div class="frases_usuario_opcion">
+            <ion-button
+              (click)="abrirFormularioEdicion(i, campoBusqueda === 'frases_usuario')"
+              color="tertiary"
+              >Actualizar</ion-button
+            >
+            <ion-button (click)="eliminarFraseUsuario(i)" color="danger"
+              >Eliminar</ion-button
+            >
+            <ion-button (click)="moverAFrases(i)">Mover a Frases</ion-button>
+          </div>
+        </div>
       </ion-item>
     </ion-list>
   </ion-card>
@@ -154,18 +182,25 @@
     <ion-list>
       <!-- Utilizar *ngFor con la función filtrarFrases() -->
       <ion-item *ngFor="let frase of filtrarFrases(frasesDelDia); let i=index">
-
-        {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
-      <div class="boton">
-        <ion-button (click)="moverAFrasesUsuarioDesdeDelDia(i)"
-        >Mover a Frases Usuario</ion-button
-      >
-      <ion-button (click)="moverAFrasesDesdeDelDia(i)"
-        >Mover a Frases</ion-button
-      >
-    </div>
+        <div class="item">
+          <div class="frases_del_dia">
+            {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
+          </div>
+          <div class="frases_del_dia_opcion">
+            <div class="boton">
+              <ion-button (click)="moverAFrasesUsuarioDesdeDelDia(i)"
+                >Mover a Frases Usuario</ion-button
+              >
+              <ion-button (click)="moverAFrasesDesdeDelDia(i)"
+                >Mover a Frases</ion-button
+              >
+              <ion-button (click)="eliminarFraseDelDia(i)" color="danger"
+              >Eliminar</ion-button
+            >
+            </div>
+          </div>
+        </div>
       </ion-item>
-      
     </ion-list>
   </ion-card>
 </ion-content>

@@ -47,8 +47,11 @@ export class AdminPage implements OnInit {
   }
   toggleFav(imagen: any) {
     // Cambiar el valor de la propiedad 'fav' (alternar entre true y false)
+    
+    for (let i = 0; i < this.listaImagenes.length; i++) {
+      this.listaImagenes[i].fav=false;
+    }
     imagen.fav = !imagen.fav;
-
     // Guardar los cambios en Firebase u otro servicio, según sea necesario
     this.dataService.guardarDatosFoto(this.listaImagenes).subscribe(() => {
       console.log('Cambio en la propiedad fav guardado correctamente.');
@@ -254,6 +257,12 @@ export class AdminPage implements OnInit {
     if (index >= 0 && index < this.frasesUsuario.length) {
       this.frasesUsuario.splice(index, 1);
       this.guardarFrasesYUsuario();
+    }
+  }
+  eliminarFraseDelDia(index: number) {
+    if (index >= 0 && index < this.frasesUsuario.length) {
+      this.frasesDelDia.splice(index, 1);
+      this.guardarFrasesYUsuarioYDelDia();
     }
   }
   obtenerFrasesUsuario() {

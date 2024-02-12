@@ -1,0 +1,50 @@
+/* Estilos para el componente Frases */
+ion-card {
+    margin: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  ion-card-title {
+    background-color: #3498db;
+    color: #fff;
+    padding: 15px;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  
+  ion-list {
+    padding: 15px;
+  }
+  .frases_opcion{
+    flex: 2;
+    justify-content: space-between;
+  }
+  ion-item {
+    border-bottom: 1px solid #ecf0f1;
+    display: flex;
+  }
+  .item{
+    display: flex;
+    flex-direction: column;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+  
+  ion-button {
+    margin-right: 8px;
+  }
+  
+  ion-button[icon-only] {
+    padding: 5px;
+  }
+  
+  ion-button[color="success"] {
+    background-color: #2ecc71;
+  }
+  
+  ion-button[color="success"]:hover {
+    background-color: #27ae60;
+  }
+  
