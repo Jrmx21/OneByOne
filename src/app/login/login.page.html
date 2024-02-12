@@ -1,11 +1,13 @@
-<!-- login.page.html
+
 <ion-header>
   <ion-toolbar color="secondary">
+    <ion-button slot="start" routerLink="/" fill="clear" ><ion-icon name="arrow-back-outline"></ion-icon></ion-button>
     <ion-title>Login</ion-title>
+    
+   
   </ion-toolbar>
 </ion-header>
-
-<ion-content>
+<!-- <ion-content>
   <ion-button routerLink="/">Volver</ion-button>
   <ion-item>
     <ion-label position="floating">Correo electrónico</ion-label>
@@ -25,8 +27,7 @@
 <!-- login.component.html -->
 <ion-content>
   <ion-card>
-    <ion-card-title>Login</ion-card-title>
-    <ion-button routerLink="/">Volver</ion-button>
+    
     <ion-item>
       <ion-label>Usuario:</ion-label>
       <ion-input [(ngModel)]="username" placeholder="Ingrese su usuario"></ion-input>

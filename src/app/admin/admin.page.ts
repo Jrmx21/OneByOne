@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../services/data.service';
-import { ModalController, NavController } from '@ionic/angular';
+import { MenuController, ModalController, NavController } from '@ionic/angular';
 import { EdicionFraseModalPage } from '../modals/edicion-frase-modal/edicion-frase-modal.page';
 import { AuthService } from '../services/auth.service';
 import { LowerCasePipe } from '@angular/common';
@@ -24,15 +24,28 @@ export class AdminPage implements OnInit {
   listaImagenes: any[] = [];
   searchTextImage: any;
   selectedImage: any;
+  muestraMenuFrase: "imagen"| "frase" ="frase" ;
   tipoBusqueda: 'id' | 'fecha' | 'autor' | 'frase' = 'id';
-    constructor(
+  constructor(
     private dataService: DataService,
     private navCtrl: NavController,
     private modalController: ModalController,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private menuCtrl: MenuController
   ) {}
   ngOnInit() {
+    // Use matchMedia to check the user preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    // Initialize the dark theme based on the initial
+    // value of the prefers-color-scheme media query
+    this.initializeDarkTheme(prefersDark.matches);
+
+    // Listen for changes to the prefers-color-scheme media query
+    prefersDark.addEventListener('change', (mediaQuery) =>
+      this.initializeDarkTheme(mediaQuery.matches)
+    );
     this.obtenerFrases();
     this.obtenerFrasesUsuario();
     this.obtenerFrasesDelDia();
@@ -47,9 +60,9 @@ export class AdminPage implements OnInit {
   }
   toggleFav(imagen: any) {
     // Cambiar el valor de la propiedad 'fav' (alternar entre true y false)
-    
+
     for (let i = 0; i < this.listaImagenes.length; i++) {
-      this.listaImagenes[i].fav=false;
+      this.listaImagenes[i].fav = false;
     }
     imagen.fav = !imagen.fav;
     // Guardar los cambios en Firebase u otro servicio, según sea necesario
@@ -61,7 +74,7 @@ export class AdminPage implements OnInit {
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
   }
-  
+
   private filtrarPorFecha(lista: any[]): any[] {
     // Implementa la lógica de filtrado por fecha aquí
     // Puedes usar this.fechaBusqueda para obtener la fecha seleccionada
@@ -303,5 +316,25 @@ export class AdminPage implements OnInit {
       // Si no está autenticado, redirigir a la página de login
       this.router.navigate(['/login']);
     }
+  }
+  openMenu() {
+    this.menuCtrl.open('menu');
+  }
+  themeToggle = false;
+
+  // Check/uncheck the toggle and update the theme based on isDark
+  initializeDarkTheme(isDark: any) {
+    this.themeToggle = isDark;
+    this.toggleDarkTheme(isDark);
+  }
+
+  // Listen for the toggle check/uncheck to toggle the dark theme
+  toggleChange(ev: any) {
+    this.toggleDarkTheme(ev.detail.checked);
+  }
+
+  // Add or remove the "dark" class on the document body
+  toggleDarkTheme(shouldAdd: any) {
+    document.body.classList.toggle('dark', shouldAdd);
   }
 }
