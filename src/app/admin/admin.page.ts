@@ -74,7 +74,10 @@ export class AdminPage implements OnInit {
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
   }
-
+  modoAutomaticoFotos(){
+    let indiceAleatorio = Math.floor(Math.random() * this.listaImagenes.length);
+    this.toggleFav(this.listaImagenes[indiceAleatorio]);
+  }
   private filtrarPorFecha(lista: any[]): any[] {
     // Implementa la lógica de filtrado por fecha aquí
     // Puedes usar this.fechaBusqueda para obtener la fecha seleccionada
@@ -167,7 +170,20 @@ export class AdminPage implements OnInit {
       this.frases = Object.values(data) || [];
     });
   }
+toggleFavFrase(index: number) {
+  if (index >= 0 && index < this.frases.length) {
+    // Desmarcar todas las frases
+    this.frases.forEach((frase) => (frase.fav = false));
 
+    // Marcar la frase actual como favorita
+    this.frases[index].fav = true;
+
+    // Guardar el estado actualizado
+    this.guardarFrases();
+  }
+}
+
+  
   crearFrase() {
     if (this.nuevaFrase && this.nuevaFrase.frase && this.nuevaFrase.autor) {
       this.frases.push({
@@ -178,40 +194,11 @@ export class AdminPage implements OnInit {
       this.nuevaFrase = {};
     }
   }
-  modoAutomatico() {
-    // Verificar si hay frases disponibles para el modo automático
-    if (this.frasesDelDia.length < this.frases.length) {
-      // Seleccionar una frase aleatoria que no esté en frasesDelDia
-      const frasesDisponibles = this.frases.filter(
-        (frase) => !this.frasesDelDia.some((fd) => fd.frase === frase.frase)
-      );
-
-      if (frasesDisponibles.length > 0) {
-        const indexAleatorio = Math.floor(
-          Math.random() * frasesDisponibles.length
-        );
-        const fraseAleatoria = frasesDisponibles[indexAleatorio];
-
-        // Agregar la frase del día
-        this.frasesDelDia.push({
-          ...fraseAleatoria,
-          fecha: new Date().toISOString(),
-        });
-
-        // Agregar la frase usada
-        this.frasesUsuario.push({
-          ...fraseAleatoria,
-          fecha: new Date().toISOString(),
-        });
-
-        // Guardar los cambios
-        this.guardarFrasesYUsuarioYDelDia();
-      } else {
-        console.log('No hay más frases disponibles para el modo automático.');
-      }
-    } else {
-      console.log('Todas las frases ya están en frasesDelDia.');
-    }
+  modoAutomatico() {  
+    //indice aleatorio
+    let indiceAleatorio = Math.floor(Math.random() * this.frases.length);
+    //frase aleatoria
+    this.toggleFavFrase(indiceAleatorio);
   }
   actualizarFrase(
     index: number,

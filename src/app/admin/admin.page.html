@@ -37,9 +37,10 @@
 <ion-header>
   <ion-toolbar color="secondary">
     <ion-title> Administrador </ion-title>
-    <ion-button slot="start" routerLink="/" fill="clear" ><ion-icon name="arrow-back-outline"></ion-icon></ion-button>
+    <ion-button slot="start" routerLink="/" fill="clear"
+      ><ion-icon name="arrow-back-outline"></ion-icon
+    ></ion-button>
   </ion-toolbar>
-
 </ion-header>
 
 <ion-content>
@@ -51,151 +52,159 @@
       <ion-label>Fotos</ion-label>
     </ion-segment-button>
   </ion-segment>
- 
 
-  <ion-card >
+  <ion-card>
     <ion-card-content *ngIf="muestraMenuFrase === 'frase'">
-      <ion-button (click)="modoAutomatico()">Modo Automático</ion-button>
     </ion-card-content>
     <!-- MODAL -->
-  <div *ngIf="muestraMenuFrase === 'imagen'">
-    
-          <!-- Agrega un campo de búsqueda -->
-          <ion-searchbar
-            [(ngModel)]="searchTextImage"
-            placeholder="Buscar"
-          ></ion-searchbar>
+    <div *ngIf="muestraMenuFrase === 'imagen'">
+      <!-- Agrega un campo de búsqueda -->
+      <ion-searchbar
+        [(ngModel)]="searchTextImage"
+        placeholder="Buscar"
+      ></ion-searchbar>
 
-          <!-- Itera sobre cada imagen y muestra el botón "Toggle Fav" -->
-          <ion-item
-            *ngFor="let imagen of listaImagenes | buscarImagen: searchTextImage; let i=index"
-            class="listaImagenes"
-          >
-            <div class="imagen">
-              <img [src]="imagen.imagen" /> ID: {{i}} - {{imagen.autor}}
-            </div>
-            <div class="opcionesImagen">
-              
-              <ion-button *ngIf="!imagen.fav" (click)="toggleFav(imagen)" color="tertiary"><ion-icon name="star-outline"></ion-icon></ion-button>
-              <ion-button *ngIf="imagen.fav" (click)="toggleFav(imagen)" color="success"><ion-icon name="star"></ion-icon></ion-button>
-            </div>
-          </ion-item>
-
-     </div>
+      <ion-button (click)="modoAutomaticoFotos()" expand="block"><ion-icon name="shuffle-outline"></ion-icon></ion-button>
+      <ion-item
+        *ngFor="let imagen of listaImagenes | buscarImagen: searchTextImage; let i=index"
+        class="listaImagenes"
+      >
+        <div class="imagen">
+          <img [src]="imagen.imagen" /> ID: {{i}} - {{imagen.autor}}
+        </div>
+        <div class="opcionesImagen">
+          <ion-button
+            *ngIf="!imagen.fav"
+            (click)="toggleFav(imagen)"
+            color="tertiary"
+            ><ion-icon name="star-outline"></ion-icon
+          ></ion-button>
+          <ion-button
+            *ngIf="imagen.fav"
+            (click)="toggleFav(imagen)"
+            color="success"
+            ><ion-icon name="star"></ion-icon
+          ></ion-button>
+        </div>
+      </ion-item>
+    </div>
   </ion-card>
-  
+
   <div *ngIf="muestraMenuFrase === 'frase'">
-  <ion-card  >
-    <ion-card-title>Añadir a frase</ion-card-title>
-    <ion-item>
-      <ion-label>Frase:</ion-label>
-      <ion-input
-        [(ngModel)]="nuevaFrase.frase"
-        placeholder="Ingrese una nueva frase"
-      ></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label>Autor:</ion-label>
-      <ion-input
-        [(ngModel)]="nuevaFrase.autor"
-        placeholder="Ingrese el autor"
-      ></ion-input>
-    </ion-item>
-    <ion-button (click)="crearFrase()">Agregar</ion-button>
-    
-  </ion-card>   
-  <ion-segment [(ngModel)]="campoBusqueda">
-    <ion-segment-button value="frases">
-      <ion-label>Frases</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="frases_usuario">
-      <ion-label>Frases Usuario</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="frases_del_dia">
-      <ion-label>Frases del Día</ion-label>
-    </ion-segment-button>
-  </ion-segment>
-  <ion-searchbar [(ngModel)]="searchText"></ion-searchbar>
-  <ion-card *ngIf="campoBusqueda === 'frases'" >
-    <ion-card-title>Frases</ion-card-title>
-    <ion-list>
-      <!-- Utilizar *ngFor con la función filtrarFrases() -->
-      <ion-item *ngFor="let frase of filtrarFrases(frases); let i=index">
-        <div class="item">
-          <div class="frases">
-            {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
-          </div>
-          <div class="frases_opcion">
-            <ion-button (click)="abrirFormularioEdicion(i)" color="tertiary"
-              >Actualizar</ion-button
-            >
-            <ion-button (click)="eliminarFrase(i)" color="danger"
-              >Eliminar</ion-button
-            >
-            <ion-button (click)="moverAFrasesUsuario(i)" color="primary"
-              >Mover a Frases Usuario</ion-button
-            >
-            <ion-button color="success" (click)="moverAFrasesDelDia(i)"
-              ><ion-icon name="flag-outline"></ion-icon
-            ></ion-button>
-          </div>
-        </div>
+    <ion-card>
+      <ion-card-title>Añadir a frase</ion-card-title>
+      <ion-item>
+        <ion-label>Frase:</ion-label>
+        <ion-input
+          [(ngModel)]="nuevaFrase.frase"
+          placeholder="Ingrese una nueva frase"
+        ></ion-input>
       </ion-item>
-    </ion-list>
-  </ion-card>
-
-  <!-- Sección Frases Usuario -->
-  <ion-card *ngIf="campoBusqueda === 'frases_usuario'">
-    <ion-card-title>Frases Usuario</ion-card-title>
-    <ion-list>
-      <!-- Utilizar *ngFor con la función filtrarFrases() -->
-      <ion-item *ngFor="let frase of filtrarFrases(frasesUsuario); let i=index">
-        <div class="item">
-          <div class="frases_usuario">
-            {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
-          </div>
-          <div class="frases_usuario_opcion">
-            <ion-button
-              (click)="abrirFormularioEdicion(i, campoBusqueda === 'frases_usuario')"
-              color="tertiary"
-              >Actualizar</ion-button
-            >
-            <ion-button (click)="eliminarFraseUsuario(i)" color="danger"
-              >Eliminar</ion-button
-            >
-            <ion-button (click)="moverAFrases(i)">Mover a Frases</ion-button>
-          </div>
-        </div>
+      <ion-item>
+        <ion-label>Autor:</ion-label>
+        <ion-input
+          [(ngModel)]="nuevaFrase.autor"
+          placeholder="Ingrese el autor"
+        ></ion-input>
       </ion-item>
-    </ion-list>
-  </ion-card>
-
-  <!-- Sección Frases del Día -->
-  <ion-card *ngIf="campoBusqueda === 'frases_del_dia'">
-    <ion-card-title>Frases del Día</ion-card-title>
-    <ion-list>
-      <!-- Utilizar *ngFor con la función filtrarFrases() -->
-      <ion-item *ngFor="let frase of filtrarFrases(frasesDelDia); let i=index">
-        <div class="item">
-          <div class="frases_del_dia">
-            {{i}} {{ frase.frase }} - {{ frase.autor }} - {{frase.fechaSubida}}
-          </div>
-          <div class="frases_del_dia_opcion">
-            <div class="boton">
-              <ion-button (click)="moverAFrasesUsuarioDesdeDelDia(i)"
+      <ion-button (click)="crearFrase()">Agregar</ion-button>
+    </ion-card>
+    <ion-segment [(ngModel)]="campoBusqueda">
+      <ion-segment-button value="frases">
+        <ion-label>Frases</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="frases_usuario">
+        <ion-label>Frases Usuario</ion-label>
+      </ion-segment-button>
+      <!-- <ion-segment-button value="frases_del_dia">
+        <ion-label>Frases del Día</ion-label>
+      </ion-segment-button> -->
+    </ion-segment>
+    <ion-searchbar [(ngModel)]="searchText"></ion-searchbar>
+    <ion-card *ngIf="campoBusqueda === 'frases'">
+      <ion-card-title>Frases</ion-card-title>
+      <ion-button  (click)="modoAutomatico()" expand="block"><ion-icon name="shuffle-outline"></ion-icon></ion-button>
+      <ion-list>
+        <!-- Utilizar *ngFor con la función filtrarFrases() -->
+        <!-- Dentro del bucle ngFor en tu vista -->
+        <ion-item *ngFor="let frase of filtrarFrases(frases); let i=index">
+          <div class="item">
+            <div class="frases">
+              {{i}} {{ frase.frase }} - {{ frase.autor }} -
+            </div>
+            <div class="frases_opcion">
+              <ion-button (click)="abrirFormularioEdicion(i)" color="tertiary"
+                >Actualizar</ion-button
+              >
+              <ion-button (click)="eliminarFrase(i)" color="danger"
+                >Eliminar</ion-button
+              >
+              <ion-button (click)="moverAFrasesUsuario(i)" color="primary"
                 >Mover a Frases Usuario</ion-button
               >
-              <ion-button (click)="moverAFrasesDesdeDelDia(i)"
-                >Mover a Frases</ion-button
-              >
-              <ion-button (click)="eliminarFraseDelDia(i)" color="danger"
-              >Eliminar</ion-button
-            >
+              <ion-button color="success" (click)="toggleFavFrase(i)">
+                <ion-icon
+                  [name]="frase.fav ? 'star' : 'star-outline'"
+                ></ion-icon>
+              </ion-button>
             </div>
           </div>
-        </div>
-      </ion-item>
-    </ion-list>
-  </ion-card>
-</div>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+    <ion-card *ngIf="campoBusqueda === 'frases_usuario'">
+      <ion-card-title>Frases Usuario</ion-card-title>
+      <ion-list>
+        <!-- Utilizar *ngFor con la función filtrarFrases() -->
+        <ion-item *ngFor="let frase of filtrarFrases(frasesUsuario); let i=index">
+          <div class="item">
+            <div class="frases_usuario">
+              {{i}} {{ frase.frase }} - {{ frase.autor }} -
+              {{frase.fechaSubida}}
+            </div>
+            <div class="frases_usuario_opcion">
+              <ion-button
+                (click)="abrirFormularioEdicion(i, campoBusqueda === 'frases_usuario')"
+                color="tertiary"
+                >Actualizar</ion-button
+              >
+              <ion-button (click)="eliminarFraseUsuario(i)" color="danger"
+                >Eliminar</ion-button
+              >
+              <ion-button (click)="moverAFrases(i)">Mover a Frases</ion-button>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+
+    <!-- <ion-card *ngIf="campoBusqueda === 'frases_del_dia'">
+      <ion-card-title>Frases del Día</ion-card-title>
+      <ion-list>
+        <ion-item
+          *ngFor="let frase of frasesDelDia; let i=index"
+        >
+          <div class="item">
+            <div class="frases_del_dia">
+              {{i}} {{ frase.frase }} - {{ frase.autor }} -
+              {{frase.fechaSubida}}
+            </div>
+            <div class="frases_del_dia_opcion">
+              <div class="boton">
+                <ion-button (click)="moverAFrasesUsuarioDesdeDelDia(i)"
+                  >Mover a Frases Usuario</ion-button
+                >
+                <ion-button (click)="moverAFrasesDesdeDelDia(i)"
+                  >Mover a Frases</ion-button
+                >
+                <ion-button (click)="eliminarFraseDelDia(i)" color="danger"
+                  >Eliminar</ion-button
+                >
+              </div>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+    </ion-card> -->
+  </div>
 </ion-content>

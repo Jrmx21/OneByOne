@@ -134,19 +134,27 @@ export class Tab2Page {
   seleccionarFraseAleatoria() {
     this.frase = '';
     setTimeout(() => {
-      this.dataService.obtenerFrasesDelDia().subscribe((data) => {
-        let frases: any = Object.values(data);
-        let indiceAleatorio = Math.floor(Math.random() * frases.length);
-        this.frase = frases[indiceAleatorio].frase;
-        this.autor = frases[indiceAleatorio].autor;
-      });
+      // Filtrar las frases del día para obtener solo las favoritas
+      this.dataService.obtenerFrasesFirebase().subscribe((data) => {
+        let frases: any = Object.values(data).filter((frase: any) => frase.fav);
+        
+        // Verificar si hay frases favoritas
+        if (frases.length > 0) {
+          let indiceAleatorio = Math.floor(Math.random() * frases.length);
+          this.frase = frases[indiceAleatorio].frase;
+          this.autor = frases[indiceAleatorio].autor;
+        } else {
+          // Manejar el caso en el que no hay frases favoritas
+          this.presentarTostada('No hay frases favoritas seleccionadas', 'warning');
+        }
+      },
       (error: any) => {
         console.log(error);
         this.presentarTostada('Error al cargar la frase', 'danger');
-      };
+      });
     }, 500);
   }
-
+  
   //MUESTRA BIENVENIDA AL ENTRAR
   ionViewDidEnter() {
     this.mostrarBienvenida = true;

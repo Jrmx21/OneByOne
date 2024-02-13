@@ -18,7 +18,7 @@ export class DataService {
   public publicarFraseEnFirebase(nuevaFrase: any): void {
     const fechaSubida = new Date().toUTCString();
     nuevaFrase.fechaSubida = fechaSubida.substring(0, fechaSubida.length - 5);
-    this.http.post(this.apiUrl + `frases_usuario.json`, nuevaFrase).subscribe(
+    this.http.put(this.apiUrl + `frases_usuario.json`, nuevaFrase).subscribe(
       (response) => {
         console.log('Frase publicada exitosamente en Firebase:', response);
       },
@@ -63,7 +63,7 @@ export class DataService {
     this.setCookie('imagenUrl', foto, 12 / 24);
 
     this.http
-      .post(
+      .put(
         this.apiUrl+'fotos_usuario.json',
         data
       )
