@@ -76,15 +76,7 @@ export class Tab3Page {
       this.cookieService.set('imagenUrl', 'prueba', this.duracionCookie);
       this.mostrarFoto = false;
 
-      if (
-        this.autorFoto == '' ||
-        this.autorFoto == null ||
-        this.autorFoto == undefined ||
-        this.autorFoto == ' ' ||
-        this.tipoAutorFoto == 'anonimo'
-      ) {
-        this.autorFoto = 'Anónimo';
-      }
+     
 
       // Establece la cookie de publicación con una duración de 4 horas
     } else {
@@ -93,7 +85,16 @@ export class Tab3Page {
         'tertiary'
       );
       // Puedes mostrar un mensaje al usuario indicando que solo se permite una foto cada 4 horas
+    }   if (
+      this.autorFoto == '' ||
+      this.autorFoto == null ||
+      this.autorFoto == undefined ||
+      this.autorFoto == ' ' ||
+      this.tipoAutorFoto == 'anonimo'
+    ) {
+      this.autorFoto = 'Anónimo';
     }
+    
   };
 
   savePhoto(photo: string) {
@@ -116,6 +117,7 @@ export class Tab3Page {
         'tertiary'
       );
     }
+ 
   }
 
   async presentarTostada(message: string, color: string) {

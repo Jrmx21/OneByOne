@@ -1,11 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../services/data.service';
-import { MenuController, ModalController, NavController } from '@ionic/angular';
+import {
+  MenuController,
+  ModalController,
+  NavController,
+  ToastController,
+} from '@ionic/angular';
 import { EdicionFraseModalPage } from '../modals/edicion-frase-modal/edicion-frase-modal.page';
 import { AuthService } from '../services/auth.service';
 import { LowerCasePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { BuscarImagenPipe } from '../pipes/buscar-imagen.pipe';
+import { CookieService } from 'ngx-cookie-service';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 @Component({
   selector: 'app-admin',
@@ -24,15 +31,21 @@ export class AdminPage implements OnInit {
   listaImagenes: any[] = [];
   searchTextImage: any;
   selectedImage: any;
-  muestraMenuFrase: "imagen"| "frase" ="frase" ;
+  muestraMenuFrase: 'imagen' | 'frase' = 'frase';
   tipoBusqueda: 'id' | 'fecha' | 'autor' | 'frase' = 'id';
+  fotoUrl: string = '';
+  mostrarFoto: boolean = true;
+  autorFoto: string = '';
+  tipoAutorFoto: any;
   constructor(
     private dataService: DataService,
     private navCtrl: NavController,
     private modalController: ModalController,
     private auth: AuthService,
     private router: Router,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private toastController: ToastController,
+    private cookieService: CookieService
   ) {}
   ngOnInit() {
     // Use matchMedia to check the user preference
@@ -48,33 +61,49 @@ export class AdminPage implements OnInit {
     );
     this.obtenerFrases();
     this.obtenerFrasesUsuario();
-    this.obtenerFrasesDelDia();
     this.dataService.obtenerFotos().subscribe((data) => {
       this.listaImagenes = Object.values(data) || [];
       console.log('Frases obtenidas: ', this.listaImagenes);
-      console.log('-------------------');
     });
   }
-  selectImage(imagen: any) {
-    this.selectedImage = imagen;
-  }
+
   toggleFav(imagen: any) {
     // Cambiar el valor de la propiedad 'fav' (alternar entre true y false)
-
     for (let i = 0; i < this.listaImagenes.length; i++) {
       this.listaImagenes[i].fav = false;
     }
     imagen.fav = !imagen.fav;
+    imagen.usada=true;
+    imagen.fechaUsada = new Date().toISOString();
     // Guardar los cambios en Firebase u otro servicio, según sea necesario
     this.dataService.guardarDatosFoto(this.listaImagenes).subscribe(() => {
       console.log('Cambio en la propiedad fav guardado correctamente.');
     });
   }
+  eliminarFoto(imagen: any) {
+    const confirmacion = window.confirm(
+      '¿Estás seguro de que quieres eliminar esta foto?'
+    );
+
+    if (confirmacion) {
+      this.listaImagenes = this.listaImagenes.filter((img) => img !== imagen);
+      this.dataService.guardarDatosFoto(this.listaImagenes).subscribe(
+        () => {
+          console.log('Foto eliminada correctamente.');
+        },
+        (error) => {
+          console.error('Error al eliminar la foto:', error);
+        }
+      );
+    } else {
+      console.log('Operación de eliminación cancelada por el usuario.');
+    }
+  }
 
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
   }
-  modoAutomaticoFotos(){
+  modoAutomaticoFotos() {
     let indiceAleatorio = Math.floor(Math.random() * this.listaImagenes.length);
     this.toggleFav(this.listaImagenes[indiceAleatorio]);
   }
@@ -101,13 +130,6 @@ export class AdminPage implements OnInit {
       this.frasesUsuario = this.filtrarPorCampo(this.frasesUsuario, filtro);
     }
   }
-
-  obtenerFrasesDelDia() {
-    this.dataService.obtenerFrasesDelDia().subscribe((data) => {
-      this.frasesDelDia = Object.values(data) || [];
-    });
-  }
-
   moverAFrasesDelDia(index: number) {
     if (index >= 0 && index < this.frases.length) {
       const fraseMovida = this.frases.splice(index, 1)[0];
@@ -150,6 +172,50 @@ export class AdminPage implements OnInit {
       this.guardarFrasesYUsuarioYDelDia();
     }
   }
+  takePicture = async () => {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.DataUrl,
+      source: CameraSource.Camera,
+    });
+    this.fotoUrl = image.dataUrl!;
+    const imageElement = document.getElementById(
+      'capturedImage'
+    ) as HTMLImageElement;
+    imageElement.src = this.fotoUrl;
+    this.mostrarFoto = false;
+    if (
+      this.autorFoto == '' ||
+      this.autorFoto == null ||
+      this.autorFoto == undefined ||
+      this.autorFoto == ' ' ||
+      this.tipoAutorFoto == 'anonimo'
+    ) {
+      this.autorFoto = 'Anónimo';
+    }
+  };
+
+  savePhotoWithoutCookie(photo: string) {
+    this.dataService.guardarFoto(photo, this.autorFoto);
+    this.presentarTostada('Foto publicada correctamente.', 'success');
+    this.listaImagenes.push({
+      imagen: photo,
+      autor: this.autorFoto,
+      fechaSubida: new Date().toISOString(),
+      fav: false,
+    });
+  }
+  async presentarTostada(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 1000,
+      color: color,
+      position: 'bottom',
+    });
+
+    await toast.present();
+  }
 
   private guardarFrasesYUsuarioYDelDia() {
     this.dataService.guardarDatos(this.frases).subscribe(() => {
@@ -170,20 +236,19 @@ export class AdminPage implements OnInit {
       this.frases = Object.values(data) || [];
     });
   }
-toggleFavFrase(index: number) {
-  if (index >= 0 && index < this.frases.length) {
-    // Desmarcar todas las frases
-    this.frases.forEach((frase) => (frase.fav = false));
+  toggleFavFrase(index: number) {
+    if (index >= 0 && index < this.frases.length) {
+      // Desmarcar todas las frases
+      this.frases.forEach((frase) => (frase.fav = false));
 
-    // Marcar la frase actual como favorita
-    this.frases[index].fav = true;
+      // Marcar la frase actual como favorita
+      this.frases[index].fav = true;
 
-    // Guardar el estado actualizado
-    this.guardarFrases();
+      // Guardar el estado actualizado
+      this.guardarFrases();
+    }
   }
-}
 
-  
   crearFrase() {
     if (this.nuevaFrase && this.nuevaFrase.frase && this.nuevaFrase.autor) {
       this.frases.push({
@@ -194,7 +259,7 @@ toggleFavFrase(index: number) {
       this.nuevaFrase = {};
     }
   }
-  modoAutomatico() {  
+  modoAutomatico() {
     //indice aleatorio
     let indiceAleatorio = Math.floor(Math.random() * this.frases.length);
     //frase aleatoria

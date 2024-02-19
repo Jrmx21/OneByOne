@@ -54,17 +54,43 @@
   </ion-segment>
 
   <ion-card>
-    <ion-card-content *ngIf="muestraMenuFrase === 'frase'">
-    </ion-card-content>
+    <ion-card-content *ngIf="muestraMenuFrase === 'frase'"> </ion-card-content>
     <!-- MODAL -->
     <div *ngIf="muestraMenuFrase === 'imagen'">
-      <!-- Agrega un campo de búsqueda -->
+      <ion-card >
+        <ion-card-header class="ion-text-center">
+          <ion-card-subtitle class="ion-text-center" color="primary">Publicar Foto</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content class="ion-text-center">
+          <ion-select [(ngModel)]="tipoAutorFoto" placeholder="Selecciona el tipo de autor">
+            <ion-select-option value="anonimo">Anónimo</ion-select-option>
+            <ion-select-option value="autor">Autor</ion-select-option>
+          </ion-select>
+      
+          <ion-input label="Autor usuario" color="primary" *ngIf="tipoAutorFoto === 'autor'"
+            [(ngModel)]="autorFoto" placeholder="Introduce tu nombre"></ion-input>
+      
+          <ion-button (click)="takePicture()" color="success" expand="full">
+            <ion-icon slot="start" name="camera"></ion-icon>
+            Tomar Foto
+          </ion-button>
+      
+          <!-- La imagen capturada se mostrará aquí -->
+          <img id="capturedImage" [src]="fotoUrl" (click)="mostrarFoto ? takePicture() : null">
+          <ion-card-subtitle class="ion-text-center" *ngIf="!mostrarFoto">Haz click en la imagen para cambiarla</ion-card-subtitle>
+      
+          <ion-button *ngIf="!mostrarFoto" (click)="savePhotoWithoutCookie(fotoUrl);" routerDirection="" expand="full" color="secondary">
+            Enviar
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
       <ion-searchbar
-        [(ngModel)]="searchTextImage"
-        placeholder="Buscar"
-      ></ion-searchbar>
-
-      <ion-button (click)="modoAutomaticoFotos()" expand="block"><ion-icon name="shuffle-outline"></ion-icon></ion-button>
+      [(ngModel)]="searchTextImage"
+      placeholder="Buscar"
+    ></ion-searchbar>
+      <ion-button (click)="modoAutomaticoFotos()" expand="block"
+        ><ion-icon name="shuffle-outline"></ion-icon
+      ></ion-button>
       <ion-item
         *ngFor="let imagen of listaImagenes | buscarImagen: searchTextImage; let i=index"
         class="listaImagenes"
@@ -84,6 +110,9 @@
             (click)="toggleFav(imagen)"
             color="success"
             ><ion-icon name="star"></ion-icon
+          ></ion-button>
+          <ion-button (click)="eliminarFoto(imagen)" color="danger"
+            ><ion-icon name="trash"></ion-icon
           ></ion-button>
         </div>
       </ion-item>
@@ -123,7 +152,9 @@
     <ion-searchbar [(ngModel)]="searchText"></ion-searchbar>
     <ion-card *ngIf="campoBusqueda === 'frases'">
       <ion-card-title>Frases</ion-card-title>
-      <ion-button  (click)="modoAutomatico()" expand="block"><ion-icon name="shuffle-outline"></ion-icon></ion-button>
+      <ion-button (click)="modoAutomatico()" expand="block"
+        ><ion-icon name="shuffle-outline"></ion-icon
+      ></ion-button>
       <ion-list>
         <!-- Utilizar *ngFor con la función filtrarFrases() -->
         <!-- Dentro del bucle ngFor en tu vista -->
@@ -156,7 +187,9 @@
       <ion-card-title>Frases Usuario</ion-card-title>
       <ion-list>
         <!-- Utilizar *ngFor con la función filtrarFrases() -->
-        <ion-item *ngFor="let frase of filtrarFrases(frasesUsuario); let i=index">
+        <ion-item
+          *ngFor="let frase of filtrarFrases(frasesUsuario); let i=index"
+        >
           <div class="item">
             <div class="frases_usuario">
               {{i}} {{ frase.frase }} - {{ frase.autor }} -

@@ -57,13 +57,13 @@ export class DataService {
   public guardarFoto(foto: string, usuario: string): void {
     const fechaSubida = new Date().toISOString(); // Obtener la fecha actual en formato ISO
 
-    const data = { imagen: foto, autor: usuario, fechaSubida: fechaSubida };
+    const data = { imagen: foto, autor: usuario, fechaSubida: fechaSubida, fav: false};
 
     // Guardar la frase en una cookie con una duración de 12 horas
     this.setCookie('imagenUrl', foto, 12 / 24);
 
     this.http
-      .put(
+      .post(
         this.apiUrl+'fotos_usuario.json',
         data
       )
@@ -102,6 +102,12 @@ export class DataService {
       this.apiUrl+`fotos_usuario.json`
     );
   }
+  public eliminarFoto(imagen:any): Observable<any> {
+    return this.http.delete(
+      this.apiUrl+`fotos_usuario/${imagen}.json`
+    );
+  }
+
   public obtenerFotosFavoritas(): Observable<any[]> {
     return this.http.get(
       this.apiUrl + `fotos_usuario.json`
