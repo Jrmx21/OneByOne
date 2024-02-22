@@ -16,7 +16,7 @@ export class DataService {
   }
 
   public publicarFraseEnFirebase(nuevaFrase: any): void {
-    const fechaSubida = new Date().toUTCString();
+    const fechaSubida = new Date().toString();
     nuevaFrase.fechaSubida = fechaSubida.substring(0, fechaSubida.length - 5);
     this.http.put(this.apiUrl + `frases_usuario.json`, nuevaFrase).subscribe(
       (response) => {
@@ -55,15 +55,15 @@ export class DataService {
     );
   }
   public guardarFoto(foto: string, usuario: string): void {
-    const fechaSubida = new Date().toISOString(); // Obtener la fecha actual en formato ISO
+    const fechaSubida = new Date().toString(); // Obtener la fecha actual en formato ISO
 
-    const data = { imagen: foto, autor: usuario, fechaSubida: fechaSubida };
+    const data = { imagen: foto, autor: usuario, fechaSubida: fechaSubida, fav: false};
 
     // Guardar la frase en una cookie con una duración de 12 horas
     this.setCookie('imagenUrl', foto, 12 / 24);
 
     this.http
-      .put(
+      .post(
         this.apiUrl+'fotos_usuario.json',
         data
       )

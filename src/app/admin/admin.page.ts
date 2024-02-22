@@ -26,6 +26,7 @@ export class AdminPage implements OnInit {
   selectedImage: any;
   muestraMenuFrase: "imagen"| "frase" ="frase" ;
   tipoBusqueda: 'id' | 'fecha' | 'autor' | 'frase' = 'id';
+  
   constructor(
     private dataService: DataService,
     private navCtrl: NavController,
@@ -151,6 +152,7 @@ export class AdminPage implements OnInit {
     }
   }
 
+  
   private guardarFrasesYUsuarioYDelDia() {
     this.dataService.guardarDatos(this.frases).subscribe(() => {
       this.dataService
