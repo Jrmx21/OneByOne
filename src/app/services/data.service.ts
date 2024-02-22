@@ -102,6 +102,12 @@ export class DataService {
       this.apiUrl+`fotos_usuario.json`
     );
   }
+  public eliminarFoto(imagen:any): Observable<any> {
+    return this.http.delete(
+      this.apiUrl+`fotos_usuario/${imagen}.json`
+    );
+  }
+
   public obtenerFotosFavoritas(): Observable<any[]> {
     return this.http.get(
       this.apiUrl + `fotos_usuario.json`
