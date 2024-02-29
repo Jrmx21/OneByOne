@@ -36,7 +36,9 @@ export class AdminPage implements OnInit {
   fotoUrl: string = '';
   mostrarFoto: boolean = true;
   autorFoto: string = '';
-  tipoAutorFoto: any;
+  tipoAutorFoto: string="";
+  tipoAutorFrase: string="autor";
+  campoBusquedaImagen: "autor" | "frase" | "fechaSubida" | "fechaUsada" | "indice" = "autor";
   constructor(
     private dataService: DataService,
     private navCtrl: NavController,
@@ -73,7 +75,7 @@ export class AdminPage implements OnInit {
       this.listaImagenes[i].fav = false;
     }
     imagen.fav = !imagen.fav;
-    imagen.usada=true;
+    imagen.usada = true;
     imagen.fechaUsada = new Date().toISOString();
     // Guardar los cambios en Firebase u otro servicio, según sea necesario
     this.dataService.guardarDatosFoto(this.listaImagenes).subscribe(() => {
@@ -195,7 +197,6 @@ export class AdminPage implements OnInit {
       this.autorFoto = 'Anónimo';
     }
   };
-
   savePhotoWithoutCookie(photo: string) {
     this.dataService.guardarFoto(photo, this.autorFoto);
     this.presentarTostada('Foto publicada correctamente.', 'success');
@@ -217,7 +218,6 @@ export class AdminPage implements OnInit {
     await toast.present();
   }
 
-  
   private guardarFrasesYUsuarioYDelDia() {
     this.dataService.guardarDatos(this.frases).subscribe(() => {
       this.dataService
@@ -251,6 +251,15 @@ export class AdminPage implements OnInit {
   }
 
   crearFrase() {
+    if (
+      this.nuevaFrase.autor == '' ||
+      this.nuevaFrase.autor == null ||
+      this.nuevaFrase.autor == undefined ||
+      this.nuevaFrase.autor == ' ' ||
+      this.tipoAutorFrase == 'anonimo'
+    ) {
+      this.nuevaFrase.autor = 'Anónimo';
+    }
     if (this.nuevaFrase && this.nuevaFrase.frase && this.nuevaFrase.autor) {
       this.frases.push({
         frase: this.nuevaFrase.frase,
@@ -308,9 +317,16 @@ export class AdminPage implements OnInit {
   }
 
   eliminarFrase(index: number) {
+    const confirmacion = window.confirm(
+      '¿Estás seguro de que quieres eliminar esta frase?'
+    );
+
+    if (confirmacion) {
     if (index >= 0 && index < this.frases.length) {
       this.frases.splice(index, 1);
       this.guardarFrases();
+    }}else{
+      console.log('Operación de eliminación cancelada por el usuario.');
     }
   }
 
@@ -320,11 +336,20 @@ export class AdminPage implements OnInit {
     });
   }
   eliminarFraseUsuario(index: number) {
+    const confirmacion = window.confirm(
+      '¿Estás seguro de que quieres eliminar esta frase usuario?'
+    );
+
+    if (confirmacion) {
     if (index >= 0 && index < this.frasesUsuario.length) {
       this.frasesUsuario.splice(index, 1);
       this.guardarFrasesYUsuario();
+    }}else{
+      console.log('Operación de eliminación cancelada por el usuario.');
+    
     }
   }
+  
   eliminarFraseDelDia(index: number) {
     if (index >= 0 && index < this.frasesUsuario.length) {
       this.frasesDelDia.splice(index, 1);
@@ -389,5 +414,32 @@ export class AdminPage implements OnInit {
   // Add or remove the "dark" class on the document body
   toggleDarkTheme(shouldAdd: any) {
     document.body.classList.toggle('dark', shouldAdd);
+  }
+  buscarImagenes(): void {
+    const lowerCaseSearchText = this.searchTextImage.toLowerCase();
+    this.listaImagenes = this.listaImagenes.filter((imagen) => {
+      const fieldValue = this.getFieldValue(imagen, this.campoBusquedaImagen);
+      return fieldValue.toLowerCase().includes(lowerCaseSearchText);
+    });
+  }
+  
+  getFieldValue(imagen: any, campo: string): string {
+    switch (campo) {
+      case 'autor':
+        return imagen.autor;
+      case 'frase':
+        return imagen.frase;
+      case 'fechaSubida':
+        return this.formatDate(imagen.fechaSubida);
+      case 'fechaUsada':
+        return this.formatDate(imagen.fechaUsada) || ''; // Manejar el caso de fechaUsada null
+      case 'indice':
+        return imagen.indice.toString();
+      default:
+        return '';
+    }
+  }
+  formatDate(date: string): string {
+    return date ? date.split('T')[0] : '';
   }
 }

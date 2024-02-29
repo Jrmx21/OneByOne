@@ -53,41 +53,75 @@
     </ion-segment-button>
   </ion-segment>
 
-  <ion-card>
-    <ion-card-content *ngIf="muestraMenuFrase === 'frase'"> </ion-card-content>
     <!-- MODAL -->
     <div *ngIf="muestraMenuFrase === 'imagen'">
-      <ion-card >
-        <ion-card-header class="ion-text-center">
-          <ion-card-subtitle class="ion-text-center" color="primary">Publicar Foto</ion-card-subtitle>
-        </ion-card-header>
+      <ion-card>
+        <ion-card-title>Enviar Foto</ion-card-title>
         <ion-card-content class="ion-text-center">
-          <ion-select [(ngModel)]="tipoAutorFoto" placeholder="Selecciona el tipo de autor">
+          <ion-select
+            [(ngModel)]="tipoAutorFoto"
+            placeholder="Selecciona el tipo de autor"
+          >
             <ion-select-option value="anonimo">Anónimo</ion-select-option>
             <ion-select-option value="autor">Autor</ion-select-option>
           </ion-select>
-      
-          <ion-input label="Autor usuario" color="primary" *ngIf="tipoAutorFoto === 'autor'"
-            [(ngModel)]="autorFoto" placeholder="Introduce tu nombre"></ion-input>
-      
+
+          <ion-input
+            label="Autor usuario"
+            color="primary"
+            *ngIf="tipoAutorFoto === 'autor'"
+            [(ngModel)]="autorFoto"
+            placeholder="Introduce tu nombre"
+          ></ion-input>
+
           <ion-button (click)="takePicture()" color="success" expand="full">
             <ion-icon slot="start" name="camera"></ion-icon>
             Tomar Foto
           </ion-button>
-      
+
           <!-- La imagen capturada se mostrará aquí -->
-          <img id="capturedImage" [src]="fotoUrl" (click)="mostrarFoto ? takePicture() : null">
-          <ion-card-subtitle class="ion-text-center" *ngIf="!mostrarFoto">Haz click en la imagen para cambiarla</ion-card-subtitle>
-      
-          <ion-button *ngIf="!mostrarFoto" (click)="savePhotoWithoutCookie(fotoUrl);" routerDirection="" expand="full" color="secondary">
+          <img
+            id="capturedImage"
+            [src]="fotoUrl"
+            (click)="mostrarFoto ? takePicture() : null"
+          />
+          <ion-card-subtitle class="ion-text-center" *ngIf="!mostrarFoto"
+            >Haz click en la imagen para cambiarla</ion-card-subtitle
+          >
+
+          <ion-button
+            *ngIf="!mostrarFoto"
+            (click)="savePhotoWithoutCookie(fotoUrl);"
+            routerDirection=""
+            expand="full"
+            color="secondary"
+          >
             Enviar
           </ion-button>
         </ion-card-content>
       </ion-card>
-      <ion-searchbar
-      [(ngModel)]="searchTextImage"
-      placeholder="Buscar"
-    ></ion-searchbar>
+      <ion-item>
+        <ion-label>Buscar por:</ion-label>
+        <ion-select [(ngModel)]="campoBusquedaImagen">
+          <ion-select-option value="autor">Autor</ion-select-option>
+          <ion-select-option value="frase">Frase</ion-select-option>
+          <ion-select-option value="fechaSubida">Fecha de Subida</ion-select-option>
+          <ion-select-option value="fechaUsada">Fecha Usada</ion-select-option>
+          <ion-select-option value="indice">Índice</ion-select-option>
+        </ion-select>
+      </ion-item>
+      
+      <ion-item>
+        <ion-searchbar [(ngModel)]="searchTextImage" placeholder="Buscar"></ion-searchbar>
+      </ion-item>
+      <ion-item *ngIf="campoBusquedaImagen === 'fechaSubida' || campoBusquedaImagen === 'fechaUsada'">
+        <ion-datetime
+          [(ngModel)]="searchTextImage"
+          presentation="date"
+          min="2023-03-01"
+          max="2026-05-31"
+        ></ion-datetime>
+      </ion-item>
       <ion-button (click)="modoAutomaticoFotos()" expand="block"
         ><ion-icon name="shuffle-outline"></ion-icon
       ></ion-button>
@@ -96,8 +130,8 @@
         class="listaImagenes"
       >
         <div class="imagen">
-          <img [src]="imagen.imagen" /> {{i}}º {{imagen.autor}} [{{imagen.fechaSubida}}]
-
+          <img [src]="imagen.imagen" /> {{i}}º {{imagen.autor}}
+          [{{imagen.fechaSubida}}]
         </div>
         <div class="opcionesImagen">
           <ion-button
@@ -118,26 +152,34 @@
         </div>
       </ion-item>
     </div>
-  </ion-card>
 
   <div *ngIf="muestraMenuFrase === 'frase'">
     <ion-card>
-      <ion-card-title>Añadir a frase</ion-card-title>
-      <ion-item>
-        <ion-label>Frase:</ion-label>
-        <ion-input
-          [(ngModel)]="nuevaFrase.frase"
-          placeholder="Ingrese una nueva frase"
-        ></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>Autor:</ion-label>
-        <ion-input
-          [(ngModel)]="nuevaFrase.autor"
-          placeholder="Ingrese el autor"
-        ></ion-input>
-      </ion-item>
-      <ion-button (click)="crearFrase()">Agregar</ion-button>
+      <ion-card-title>Crear frase</ion-card-title>
+      <ion-card-content>
+        <ion-select
+          [(ngModel)]="tipoAutorFrase"
+          placeholder="Selecciona el tipo de autor"
+        >
+          <ion-select-option value="anonimo">Anónimo</ion-select-option>
+          <ion-select-option value="autor">Autor</ion-select-option>
+        </ion-select>
+        <ion-item>
+          <ion-label>Frase:</ion-label>
+          <ion-input
+            [(ngModel)]="nuevaFrase.frase"
+            placeholder="Ingrese una nueva frase"
+          ></ion-input>
+        </ion-item>
+        <ion-item *ngIf="tipoAutorFrase === 'autor'">
+          <ion-label>Autor:</ion-label>
+          <ion-input
+            [(ngModel)]="nuevaFrase.autor"
+            placeholder="Ingrese el autor"
+          ></ion-input>
+        </ion-item>
+        <ion-button (click)="crearFrase()">Agregar</ion-button>
+      </ion-card-content>
     </ion-card>
     <ion-segment [(ngModel)]="campoBusqueda">
       <ion-segment-button value="frases">
