@@ -1,10 +1,5 @@
-import { Component, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-
-import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
-import { AuthGuard } from './guards/auth.guard';
-import { NoAuthGuard } from './guards/no-auth.guard';
-import { loginGuard } from './guards/login.guard';
 // import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
@@ -27,11 +22,6 @@ const routes: Routes = [
       import('./modals/edicion-frase-modal/edicion-frase-modal.module').then(
         (m) => m.EdicionFraseModalPageModule
       ),
-  },
-  {
-    path: 'register',
-    loadChildren: () =>
-      import('./register/register.module').then((m) => m.RegisterPageModule),
   },
   {
     path: 'login',

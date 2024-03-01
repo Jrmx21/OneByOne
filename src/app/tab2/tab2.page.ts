@@ -15,8 +15,10 @@ import { Foto } from '../models';
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
+  
 })
 export class Tab2Page {
+  
   //TITULO APP hay que ponerlo global
   public myApp: string = 'OneByOne';
   //FRASE QUE SE MUESTRA
@@ -36,7 +38,7 @@ export class Tab2Page {
     private modalController: ModalController,
     private navCtrl: NavController,
     private dataService: DataService,
-    private toastController: ToastController
+    private toastController: ToastController,
   ) {}
   ngOnInit() {
     this.seleccionarFraseAleatoria();

@@ -56,8 +56,8 @@
     <!-- MODAL -->
     <div *ngIf="muestraMenuFrase === 'imagen'">
       <ion-card>
-        <ion-card-title>Enviar Foto</ion-card-title>
-        <ion-card-content class="ion-text-center">
+        <ion-card-title>Crear foto</ion-card-title>
+        <ion-card-content>
           <ion-select
             [(ngModel)]="tipoAutorFoto"
             placeholder="Selecciona el tipo de autor"
@@ -68,7 +68,6 @@
 
           <ion-input
             label="Autor usuario"
-            color="primary"
             *ngIf="tipoAutorFoto === 'autor'"
             [(ngModel)]="autorFoto"
             placeholder="Introduce tu nombre"
@@ -100,28 +99,18 @@
           </ion-button>
         </ion-card-content>
       </ion-card>
-      <ion-item>
-        <ion-label>Buscar por:</ion-label>
-        <ion-select [(ngModel)]="campoBusquedaImagen">
-          <ion-select-option value="autor">Autor</ion-select-option>
-          <ion-select-option value="frase">Frase</ion-select-option>
-          <ion-select-option value="fechaSubida">Fecha de Subida</ion-select-option>
-          <ion-select-option value="fechaUsada">Fecha Usada</ion-select-option>
-          <ion-select-option value="indice">Índice</ion-select-option>
-        </ion-select>
-      </ion-item>
-      
-      <ion-item>
-        <ion-searchbar [(ngModel)]="searchTextImage" placeholder="Buscar"></ion-searchbar>
-      </ion-item>
-      <ion-item *ngIf="campoBusquedaImagen === 'fechaSubida' || campoBusquedaImagen === 'fechaUsada'">
-        <ion-datetime
-          [(ngModel)]="searchTextImage"
-          presentation="date"
-          min="2023-03-01"
-          max="2026-05-31"
-        ></ion-datetime>
-      </ion-item>
+    <ion-item>
+  <ion-label>Buscar por:</ion-label>
+  <ion-select [(ngModel)]="campoBusquedaImagen">
+    <ion-select-option value="autor">Autor</ion-select-option>
+    <ion-select-option value="imagen">Imagen</ion-select-option>
+    <ion-select-option value="indice">Índice</ion-select-option>
+  </ion-select>
+</ion-item>
+
+<ion-item>
+  <ion-searchbar [(ngModel)]="searchTextImage" placeholder="Buscar"></ion-searchbar>
+</ion-item>
       <ion-button (click)="modoAutomaticoFotos()" expand="block"
         ><ion-icon name="shuffle-outline"></ion-icon
       ></ion-button>
@@ -130,8 +119,10 @@
         class="listaImagenes"
       >
         <div class="imagen">
-          <img [src]="imagen.imagen" /> {{i}}º {{imagen.autor}}
-          [{{imagen.fechaSubida}}]
+          <img [src]="imagen.imagen" /><h3 [style.color]="imagen.color"> {{i}}º {{imagen.autor}}</h3>
+          <p *ngIf="imagen.fechaSubida">Fecha subida:{{imagen.fechaSubida}}</p>
+               <p *ngIf="imagen.fechaUsada">Fecha uso: {{imagen.fechaUsada}}</p>
+          
         </div>
         <div class="opcionesImagen">
           <ion-button
@@ -142,7 +133,7 @@
           ></ion-button>
           <ion-button
             *ngIf="imagen.fav"
-            (click)="toggleFav(imagen)"
+            (click)="toggleFav(imagen);"
             color="success"
             ><ion-icon name="star"></ion-icon
           ></ion-button>
@@ -201,10 +192,12 @@
       <ion-list>
         <!-- Utilizar *ngFor con la función filtrarFrases() -->
         <!-- Dentro del bucle ngFor en tu vista -->
-        <ion-item *ngFor="let frase of filtrarFrases(frases); let i=index">
+        <ion-item *ngFor="let frase of filtrarFrases(frases); let i=index" >
           <div class="item">
             <div class="frases">
-              {{i}} {{ frase.frase }} - {{ frase.autor }} -
+               <h3 >{{i}} - {{ frase.autor }}</h3><p [style.color]="frase.color">{{ frase.frase }} </p>
+               <p *ngIf="frase.fechaSubida">Fecha subida:{{frase.fechaSubida}}</p>
+               <p *ngIf="frase.fechaUsada">Fecha uso: {{frase.fechaUsada}}</p>
             </div>
             <div class="frases_opcion">
               <ion-button (click)="abrirFormularioEdicion(i)" color="tertiary"
@@ -216,7 +209,7 @@
               <ion-button (click)="moverAFrasesUsuario(i)" color="primary"
                 >Mover a Frases Usuario</ion-button
               >
-              <ion-button color="success" (click)="toggleFavFrase(i)">
+              <ion-button color="success" (click)="toggleFavFrase(i);fraseUsada(i)">
                 <ion-icon
                   [name]="frase.fav ? 'star' : 'star-outline'"
                 ></ion-icon>
@@ -235,8 +228,9 @@
         >
           <div class="item">
             <div class="frases_usuario">
-              {{i}} {{ frase.frase }} - {{ frase.autor }} -
-              {{frase.fechaSubida}}
+              <h3  >{{i}} - {{ frase.autor }}</h3><p [style.color]="frase.color">{{ frase.frase }}</p>
+              <p *ngIf="frase.fechaSubida">Fecha subida:{{frase.fechaSubida}}</p>
+              <p *ngIf="frase.fechaUsada">Fecha uso: {{frase.fechaUsada}}</p>
             </div>
             <div class="frases_usuario_opcion">
               <ion-button

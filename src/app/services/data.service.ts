@@ -16,8 +16,8 @@ export class DataService {
   }
 
   public publicarFraseEnFirebase(nuevaFrase: any): void {
-    const fechaSubida = new Date().toString();
-    nuevaFrase.fechaSubida = fechaSubida.substring(0, fechaSubida.length - 5);
+    const fechaSubida = new Date().toLocaleDateString("es-ES")
+    nuevaFrase.fechaSubida = fechaSubida
     this.http.post(this.apiUrl + `frases_usuario.json`, nuevaFrase).subscribe(
       (response) => {
         console.log('Frase publicada exitosamente en Firebase:', response);

@@ -20,9 +20,9 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
   styleUrls: ['./admin.page.scss'],
 })
 export class AdminPage implements OnInit {
-  frases: any[] = [];
+  frases: any[] = [] || null;
   nuevaFrase: any = {};
-  frasesUsuario: any[] = [];
+  frasesUsuario: any[] = [] || null;
   campoBusqueda: 'frases' | 'frases_usuario' | 'frases_del_dia' = 'frases';
   textoBusqueda: string = '';
   fechaBusqueda: string = '';
@@ -36,9 +36,9 @@ export class AdminPage implements OnInit {
   fotoUrl: string = '';
   mostrarFoto: boolean = true;
   autorFoto: string = '';
-  tipoAutorFoto: string="";
-  tipoAutorFrase: string="autor";
-  campoBusquedaImagen: "autor" | "frase" | "fechaSubida" | "fechaUsada" | "indice" = "autor";
+  tipoAutorFoto: string = 'autor';
+  tipoAutorFrase: string = 'autor';
+  campoBusquedaImagen: 'autor' | 'imagen' = 'autor';
   constructor(
     private dataService: DataService,
     private navCtrl: NavController,
@@ -66,9 +66,25 @@ export class AdminPage implements OnInit {
     this.dataService.obtenerFotos().subscribe((data) => {
       this.listaImagenes = Object.values(data) || [];
       console.log('Frases obtenidas: ', this.listaImagenes);
+      for (let i = 0; i < this.listaImagenes.length; i++) {
+        // Verifica si la frase está marcada como usada
+        if (this.listaImagenes[i].usada) {
+          // Cambia el color de fondo a amarillo si está usada
+          this.listaImagenes[i].color = 'gray';
+        }
+      }
+      
     });
   }
-
+  fraseUsada(index: number) {
+    if (index >= 0 && index < this.listaImagenes.length) {
+      this.listaImagenes[index].usada = true;
+      this.listaImagenes[index].fechaUsada = new Date().toLocaleDateString("es-ES")
+      this.dataService.guardarDatosFoto(this.listaImagenes).subscribe(() => {
+        console.log('Cambio en la propiedad usada guardado correctamente.');
+      });
+    }
+  }
   toggleFav(imagen: any) {
     // Cambiar el valor de la propiedad 'fav' (alternar entre true y false)
     for (let i = 0; i < this.listaImagenes.length; i++) {
@@ -76,11 +92,18 @@ export class AdminPage implements OnInit {
     }
     imagen.fav = !imagen.fav;
     imagen.usada = true;
-    imagen.fechaUsada = new Date().toISOString();
+    imagen.fechaUsada = new Date().toLocaleDateString("es-ES")
     // Guardar los cambios en Firebase u otro servicio, según sea necesario
     this.dataService.guardarDatosFoto(this.listaImagenes).subscribe(() => {
       console.log('Cambio en la propiedad fav guardado correctamente.');
     });
+    for (let i = 0; i < this.listaImagenes.length; i++) {
+      // Verifica si la frase está marcada como usada
+      if (this.listaImagenes[i].usada) {
+        // Cambia el color de fondo a amarillo si está usada
+        this.listaImagenes[i].color = 'gray';
+      }
+    }
   }
   eliminarFoto(imagen: any) {
     const confirmacion = window.confirm(
@@ -136,8 +159,7 @@ export class AdminPage implements OnInit {
     if (index >= 0 && index < this.frases.length) {
       const fraseMovida = this.frases.splice(index, 1)[0];
       this.frasesDelDia.push({
-        ...fraseMovida,
-        fecha: new Date().toISOString(),
+        ...fraseMovida
       }); // Agrega la fecha actual
       this.guardarFrasesYUsuarioYDelDia();
     }
@@ -147,7 +169,7 @@ export class AdminPage implements OnInit {
   moverAFrasesDesdeDelDia(index: number) {
     if (index >= 0 && index < this.frasesDelDia.length) {
       const fraseMovida = this.frasesDelDia.splice(index, 1)[0];
-      this.frases.push({ ...fraseMovida, fecha: new Date().toISOString() }); // Agrega la fecha actual
+      this.frases.push({ ...fraseMovida}); // Agrega la fecha actual
       this.guardarFrasesYUsuarioYDelDia();
     }
   }
@@ -203,7 +225,7 @@ export class AdminPage implements OnInit {
     this.listaImagenes.push({
       imagen: photo,
       autor: this.autorFoto,
-      fechaSubida: new Date().toISOString(),
+      fechaSubida:new Date().toLocaleDateString("es-ES"),
       fav: false,
     });
   }
@@ -235,8 +257,16 @@ export class AdminPage implements OnInit {
   obtenerFrases() {
     this.dataService.obtenerFrasesFirebase().subscribe((data) => {
       this.frases = Object.values(data) || [];
+      for (let i = 0; i < this.frases.length; i++) {
+        // Verifica si la frase está marcada como usada
+        if (this.frases[i].usada) {
+          // Cambia el color de fondo a amarillo si está usada
+          this.frases[i].color = 'gray';
+        }
+      }
     });
   }
+  
   toggleFavFrase(index: number) {
     if (index >= 0 && index < this.frases.length) {
       // Desmarcar todas las frases
@@ -244,9 +274,18 @@ export class AdminPage implements OnInit {
 
       // Marcar la frase actual como favorita
       this.frases[index].fav = true;
-
+      this.frases[index].usada = true;
+      this.frases[index].fechaUsada =new Date().toLocaleDateString("es-ES");
+      for (let i = 0; i < this.frases.length; i++) {
+        // Verifica si la frase está marcada como usada
+        if (this.frases[i].usada) {
+          // Cambia el color de fondo a amarillo si está usada
+          this.frases[i].color = 'gray';
+        }
+      }
       // Guardar el estado actualizado
       this.guardarFrases();
+      
     }
   }
 
@@ -264,6 +303,9 @@ export class AdminPage implements OnInit {
       this.frases.push({
         frase: this.nuevaFrase.frase,
         autor: this.nuevaFrase.autor,
+        fechaSubida: new Date().toLocaleDateString("es-ES"),
+        fav: false,
+        usada: false
       });
       this.guardarFrases();
       this.nuevaFrase = {};
@@ -322,10 +364,11 @@ export class AdminPage implements OnInit {
     );
 
     if (confirmacion) {
-    if (index >= 0 && index < this.frases.length) {
-      this.frases.splice(index, 1);
-      this.guardarFrases();
-    }}else{
+      if (index >= 0 && index < this.frases.length) {
+        this.frases.splice(index, 1);
+        this.guardarFrases();
+      }
+    } else {
       console.log('Operación de eliminación cancelada por el usuario.');
     }
   }
@@ -341,15 +384,15 @@ export class AdminPage implements OnInit {
     );
 
     if (confirmacion) {
-    if (index >= 0 && index < this.frasesUsuario.length) {
-      this.frasesUsuario.splice(index, 1);
-      this.guardarFrasesYUsuario();
-    }}else{
+      if (index >= 0 && index < this.frasesUsuario.length) {
+        this.frasesUsuario.splice(index, 1);
+        this.guardarFrasesYUsuario();
+      }
+    } else {
       console.log('Operación de eliminación cancelada por el usuario.');
-    
     }
   }
-  
+
   eliminarFraseDelDia(index: number) {
     if (index >= 0 && index < this.frasesUsuario.length) {
       this.frasesDelDia.splice(index, 1);
@@ -359,6 +402,13 @@ export class AdminPage implements OnInit {
   obtenerFrasesUsuario() {
     this.dataService.obtenerFrasesUsuario().subscribe((data) => {
       this.frasesUsuario = Object.values(data) || [];
+      for (let i = 0; i < this.frasesUsuario.length; i++) {
+        // Verifica si la frase está marcada como usada
+        if (this.frasesUsuario[i].usada) {
+          // Cambia el color de fondo a amarillo si está usada
+          this.frasesUsuario[i].color = 'gray';
+        }
+      }
     });
   }
 
@@ -422,24 +472,19 @@ export class AdminPage implements OnInit {
       return fieldValue.toLowerCase().includes(lowerCaseSearchText);
     });
   }
-  
+
   getFieldValue(imagen: any, campo: string): string {
     switch (campo) {
       case 'autor':
         return imagen.autor;
-      case 'frase':
-        return imagen.frase;
       case 'fechaSubida':
-        return this.formatDate(imagen.fechaSubida);
+        return imagen.fechaSubida;
       case 'fechaUsada':
-        return this.formatDate(imagen.fechaUsada) || ''; // Manejar el caso de fechaUsada null
-      case 'indice':
-        return imagen.indice.toString();
+        return imagen.fechaUsada || '';
+      case 'imagen':
+        return imagen.imagen;
       default:
         return '';
     }
-  }
-  formatDate(date: string): string {
-    return date ? date.split('T')[0] : '';
   }
 }
