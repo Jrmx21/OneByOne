@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 
+
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',

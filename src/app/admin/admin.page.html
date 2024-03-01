@@ -104,7 +104,6 @@
   <ion-select [(ngModel)]="campoBusquedaImagen">
     <ion-select-option value="autor">Autor</ion-select-option>
     <ion-select-option value="imagen">Imagen</ion-select-option>
-    <ion-select-option value="indice">Índice</ion-select-option>
   </ion-select>
 </ion-item>
 
@@ -120,8 +119,8 @@
       >
         <div class="imagen">
           <img [src]="imagen.imagen" /><h3 [style.color]="imagen.color"> {{i}}º {{imagen.autor}}</h3>
-          <p *ngIf="imagen.fechaSubida">Fecha subida:{{imagen.fechaSubida}}</p>
-               <p *ngIf="imagen.fechaUsada">Fecha uso: {{imagen.fechaUsada}}</p>
+          <p *ngIf="imagen.fechaSubida" >Fecha subida:{{imagen.fechaSubida}}</p>
+               <p *ngIf="imagen.fechaUsada" style="color: gray;">Fecha uso: {{imagen.fechaUsada}}</p>
           
         </div>
         <div class="opcionesImagen">
@@ -197,7 +196,7 @@
             <div class="frases">
                <h3 >{{i}} - {{ frase.autor }}</h3><p [style.color]="frase.color">{{ frase.frase }} </p>
                <p *ngIf="frase.fechaSubida">Fecha subida:{{frase.fechaSubida}}</p>
-               <p *ngIf="frase.fechaUsada">Fecha uso: {{frase.fechaUsada}}</p>
+               <p *ngIf="frase.fechaUsada" style="color: gray;">Fecha uso: {{frase.fechaUsada}}</p>
             </div>
             <div class="frases_opcion">
               <ion-button (click)="abrirFormularioEdicion(i)" color="tertiary"
@@ -230,7 +229,7 @@
             <div class="frases_usuario">
               <h3  >{{i}} - {{ frase.autor }}</h3><p [style.color]="frase.color">{{ frase.frase }}</p>
               <p *ngIf="frase.fechaSubida">Fecha subida:{{frase.fechaSubida}}</p>
-              <p *ngIf="frase.fechaUsada">Fecha uso: {{frase.fechaUsada}}</p>
+              <p *ngIf="frase.fechaUsada" style="color: gray;">Fecha uso: {{frase.fechaUsada}}</p>
             </div>
             <div class="frases_usuario_opcion">
               <ion-button
@@ -247,34 +246,5 @@
         </ion-item>
       </ion-list>
     </ion-card>
-
-    <!-- <ion-card *ngIf="campoBusqueda === 'frases_del_dia'">
-      <ion-card-title>Frases del Día</ion-card-title>
-      <ion-list>
-        <ion-item
-          *ngFor="let frase of frasesDelDia; let i=index"
-        >
-          <div class="item">
-            <div class="frases_del_dia">
-              {{i}} {{ frase.frase }} - {{ frase.autor }} -
-              {{frase.fechaSubida}}
-            </div>
-            <div class="frases_del_dia_opcion">
-              <div class="boton">
-                <ion-button (click)="moverAFrasesUsuarioDesdeDelDia(i)"
-                  >Mover a Frases Usuario</ion-button
-                >
-                <ion-button (click)="moverAFrasesDesdeDelDia(i)"
-                  >Mover a Frases</ion-button
-                >
-                <ion-button (click)="eliminarFraseDelDia(i)" color="danger"
-                  >Eliminar</ion-button
-                >
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-    </ion-card> -->
   </div>
 </ion-content>

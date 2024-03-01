@@ -1,6 +1,5 @@
 <!-- Modal de BIENVENIDA -->
 
-
 <ion-modal *ngIf="modalBienvenida" [isOpen]="mostrarBienvenida">
   <ng-template>
     <ion-header>
@@ -19,7 +18,9 @@
         segundos.
       </p>
       <h5>Aplicacion hecha por ruizz02</h5>
-      <ion-button (click)="modalBienvenida = false;setCookieModal()  " color="secondary"
+      <ion-button
+        (click)="modalBienvenida = false;setCookieModal()  "
+        color="secondary"
         >Cerrar</ion-button
       >
       <ion-button href="https://www.google.com/" color="success"
@@ -31,7 +32,7 @@
 
 <!-- ADMIN MENU 0.1 -->
 
- <ion-header>
+<ion-header>
   <ion-toolbar color="secondary">
     <ion-title>{{myApp}}</ion-title>
     <ion-buttons slot="end">
@@ -66,8 +67,6 @@
   >
 </ion-menu> -->
 
-
-
 <div class="ion-page" id="main-content">
   <ion-header>
     <ion-toolbar>
@@ -79,7 +78,6 @@
   <ion-content class="ion-padding">
     Tap the button in the toolbar to open the menu.
   </ion-content>
-  
 </div>
 
 <ion-content [fullscreen]="true" class="ion-padding">
@@ -88,23 +86,28 @@
   </ion-refresher>
   <ion-card *ngIf="isFrase">
     <ion-card-header>
-      <ion-card-title class="titulo-card" color="primary">Frase del día</ion-card-title>
+      <ion-card-title class="titulo-card" color="primary"
+        >Frase del día</ion-card-title
+      >
     </ion-card-header>
     <ion-card-content color="primary">
       <p class="fuentefrase" *ngIf="frase!=''">{{frase}}</p>
       <p class="fuenteautor" *ngIf="frase!=''">{{autor}}</p>
 
-      <ion-item *ngIf="frase==''" >
-        <ion-spinner name="crescent" style="width: 100%;"></ion-spinner>
+      <ion-item *ngIf="frase==''">
+        <ion-spinner name="crescent" style="width: 100%"></ion-spinner>
       </ion-item>
       <div class="botones">
-      <ion-button class="compartir" color="success" (click)="compartir()"
-        ><ion-icon name="share-social-outline"></ion-icon
-      ></ion-button>
-      <ion-button class="compartir" color="success" (click)="seleccionarFraseAleatoria()"
-        ><ion-icon name="refresh"></ion-icon
-      ></ion-button>
-    </div>
+        <ion-button class="compartir" color="success" (click)="compartir()"
+          ><ion-icon name="share-social-outline"></ion-icon
+        ></ion-button>
+        <ion-button
+          class="compartir"
+          color="success"
+          (click)="seleccionarFraseAleatoria()"
+          ><ion-icon name="refresh"></ion-icon
+        ></ion-button>
+      </div>
     </ion-card-content>
   </ion-card>
   <ion-card *ngIf="!isFrase">
@@ -121,13 +124,12 @@
     duration="3000"
     animated="true"
   ></ion-toast>
- 
-  
+
   <ion-modal [isOpen]="isModalOpen">
     <ng-template>
-      <ion-header >
-        <ion-toolbar  color="secondary">
-          <ion-title><ion-icon name="body-outline"></ion-icon>Autor</ion-title>
+      <ion-header>
+        <ion-toolbar color="secondary">
+          <ion-title><ion-icon name="body-outline"></ion-icon> Autor</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="setOpen(false)"
               ><ion-icon name="arrow-back-outline"></ion-icon
@@ -149,7 +151,6 @@
               administrador de la aplicacion para que el decida si será
               candidata a ser frase del día de OneByOne puedes hacerlo
             </h3>
-          
           </ion-card-content>
         </ion-card>
         <!-- AUTOR FOTO -->
@@ -159,37 +160,63 @@
               >El autor es de la Foto es "{{autorFoto}}"</ion-card-title
             >
           </ion-card-header>
-          <ion-card-content >
+          <ion-card-content>
             <br />
-            <h3 >
+            <h3>
               Si quieres formar parte de nuestra comundidad y enviar tu frase al
               administrador de la aplicacion para que el decida si será
               candidata a ser frase del día de OneByOne puedes hacerlo
             </h3>
-        
           </ion-card-content>
         </ion-card>
-       
       </ion-content>
-      <ion-footer> <ion-button href="/tabs/tab3" expand="full" (click)="setOpen(false)"
-        >Quiero ser autor</ion-button
-      ></ion-footer>
+      <ion-footer>
+        <ion-button href="/tabs/tab3" expand="full" (click)="setOpen(false)"
+          >Quiero ser autor</ion-button
+        ></ion-footer
+      >
     </ng-template>
   </ion-modal>
   <ion-card>
-    <ion-card-header >
-      <ion-title class="titulo-card" class="titulo-card" color="primary">Foto del día</ion-title></ion-card-header>
-      
-    <img id="foto" src="../../assets/icon/favicon.png"  imageViewer/>
+    <ion-card-header>
+      <ion-title class="titulo-card" class="titulo-card" color="primary"
+        >Foto del día</ion-title
+      ></ion-card-header
+    >
+    <img
+      id="foto"
+      src="../../assets/icon/favicon.png"
+      (click)="visualizarFoto(true); "
+    />
   </ion-card>
   <ion-button
-  class="wrapper"
-  *ngIf="isFrase"
-  expand="block"
-  (click)="setOpen(true)"
-  color="secondary"
-  >Autores</ion-button
->
+    class="wrapper"
+    *ngIf="isFrase"
+    expand="block"
+    (click)="setOpen(true)"
+    color="secondary"
+    >Autores</ion-button
+  >
+  <ion-modal [isOpen]="verFoto">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="secondary">
+          <ion-title
+            ><ion-icon name="camera-outline"></ion-icon> Foto del Día</ion-title
+          >
+          <ion-buttons slot="end">
+            <ion-button (click)="visualizarFoto(false)"
+              ><ion-icon name="arrow-back-outline"></ion-icon
+            ></ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <br />
+        <img id="visualizadorImagen" [src]="fotoUrl" />
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 <!-- FOOTER -->
 <ion-footer> </ion-footer>

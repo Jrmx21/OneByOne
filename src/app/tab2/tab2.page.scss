@@ -10,6 +10,11 @@ ion-card{
     text-align: center;
 
 }
+img {
+    width: 100%;
+    height: auto;
+  }
+  
 .titulo-card{
     font-size: 200%;
     font-weight: bold;
@@ -45,4 +50,14 @@ ion-card{
     font-size: 1.5em;
     font-weight: bold;
     text-align: center;
+}
+.visualizadorImagen{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 100%;
 }

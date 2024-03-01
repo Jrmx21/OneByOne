@@ -1,14 +1,8 @@
-import { Component, enableProdMode } from '@angular/core';
+import { Component } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { DataService } from '../services/data.service';
-import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
 import { Share } from '@capacitor/share';
-import { Camera, CameraResultType } from '@capacitor/camera';
-import { defineCustomElements } from '@ionic/pwa-elements/loader';
-import { environment } from 'src/environments/environment';
-import { CookieService } from 'ngx-cookie-service';
 import { Foto } from '../models';
 
 @Component({
@@ -28,6 +22,7 @@ export class Tab2Page {
   fraseIdInput: number = 1;
   responseData: any;
   mostrarBienvenida: boolean = true;
+  verFoto: boolean = false;
   isFrase: boolean = false;
   autor: string = ' no hay autor';
   isModalOpen = false;
@@ -35,20 +30,16 @@ export class Tab2Page {
   modalBienvenida: boolean = true;
   fotoUrl: string = '';
   constructor(
-    private modalController: ModalController,
-    private navCtrl: NavController,
     private dataService: DataService,
     private toastController: ToastController,
   ) {}
   ngOnInit() {
     this.seleccionarFraseAleatoria();
     this.activarFrase();
-    let fotoHtml = document.getElementById('foto');
     this.dataService.obtenerFotosFavoritas().subscribe(
       (data) => {
         this.fotos = Object.values(data) || [];
         console.log('Fotos obtenidas: ', this.fotos);
-        console.log('-------------------');
 
         // Filtrar fotos donde la propiedad 'fav' sea true
         const fotosFavoritas = this.fotos.filter((foto) => foto.fav === true);
@@ -81,8 +72,8 @@ export class Tab2Page {
 
   }
 
-  visualizarFoto(){
-
+  visualizarFoto(abrir :boolean){
+    this.verFoto = abrir;
   }
   //Se hace al entrar
   ionViewWillEnter() {
