@@ -34,8 +34,8 @@
     <ion-item *ngFor="let frase of frases" class="custom-item">
       <ion-label>
         
-        <strong> <ion-text>{{ frase.autor }}</ion-text><br /></strong>
-              <ion-note color="medium" class="ion-text-wrap">
+        <strong> <ion-text id="autor">{{ frase.autor }}</ion-text><br /></strong>
+              <ion-note color="medium" class="ion-text-wrap" id="frase">
                 {{ frase.frase }}
               </ion-note>
             </ion-label>
