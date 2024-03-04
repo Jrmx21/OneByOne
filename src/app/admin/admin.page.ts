@@ -38,7 +38,7 @@ export class AdminPage implements OnInit {
   autorFoto: string = '';
   tipoAutorFoto: string = 'autor';
   tipoAutorFrase: string = 'autor';
-  campoBusquedaImagen: 'autor' | 'imagen' = 'autor';
+  campoBusquedaImagen: 'autor' | 'fechaSubida'|'fechaUso' = 'autor';
   constructor(
     private dataService: DataService,
     private navCtrl: NavController,
@@ -465,13 +465,6 @@ export class AdminPage implements OnInit {
   toggleDarkTheme(shouldAdd: any) {
     document.body.classList.toggle('dark', shouldAdd);
   }
-  buscarImagenes(): void {
-    const lowerCaseSearchText = this.searchTextImage.toLowerCase();
-    this.listaImagenes = this.listaImagenes.filter((imagen) => {
-      const fieldValue = this.getFieldValue(imagen, this.campoBusquedaImagen);
-      return fieldValue.toLowerCase().includes(lowerCaseSearchText);
-    });
-  }
 
   getFieldValue(imagen: any, campo: string): string {
     switch (campo) {
@@ -480,9 +473,7 @@ export class AdminPage implements OnInit {
       case 'fechaSubida':
         return imagen.fechaSubida;
       case 'fechaUsada':
-        return imagen.fechaUsada || '';
-      case 'imagen':
-        return imagen.imagen;
+        return imagen.fechaUsada;
       default:
         return '';
     }

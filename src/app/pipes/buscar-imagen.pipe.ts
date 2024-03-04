@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'buscarImagen'
 })
 export class BuscarImagenPipe implements PipeTransform {
-  transform(listaImagenes: any[], searchText: string): any[] {
+  transform(listaImagenes: any[], searchText: string,campoBusqueda:string): any[] {
     if (!listaImagenes || !searchText) {
       return listaImagenes;
     }
@@ -12,11 +12,17 @@ export class BuscarImagenPipe implements PipeTransform {
     searchText = searchText.toLowerCase();
 
     return listaImagenes.filter(imagen => {
-      // Puedes ajustar los campos que deseas incluir en la búsqueda
+   
       const autorMatch = imagen.autor.toLowerCase().includes(searchText);
-      const favMatch = imagen.fav.toString().toLowerCase().includes(searchText);
-
-      return autorMatch || favMatch;
+      
+      const fechaSubidaMatch = imagen.fechaSubida.toLowerCase().includes(searchText);
+      if (campoBusqueda=="autor") {
+        return autorMatch;
+      }
+      if (campoBusqueda=="fechaSubida") {
+        return fechaSubidaMatch;
+      }
+      return autorMatch || fechaSubidaMatch;
     });
   }
 }

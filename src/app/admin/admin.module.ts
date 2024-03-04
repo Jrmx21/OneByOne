@@ -9,8 +9,6 @@ import { AdminPageRoutingModule } from './admin-routing.module';
 import { AdminPage } from './admin.page';
 import { BuscarImagenPipe } from '../pipes/buscar-imagen.pipe';
 
-
-
 @NgModule({
   imports: [
     CommonModule,

@@ -103,10 +103,9 @@
   <ion-label>Buscar por:</ion-label>
   <ion-select [(ngModel)]="campoBusquedaImagen">
     <ion-select-option value="autor">Autor</ion-select-option>
-    <ion-select-option value="imagen">Imagen</ion-select-option>
+    <ion-select-option value="fechaSubida">Fecha Subida</ion-select-option>
   </ion-select>
 </ion-item>
-
 <ion-item>
   <ion-searchbar [(ngModel)]="searchTextImage" placeholder="Buscar"></ion-searchbar>
 </ion-item>
@@ -114,7 +113,7 @@
         ><ion-icon name="shuffle-outline"></ion-icon
       ></ion-button>
       <ion-item
-        *ngFor="let imagen of listaImagenes | buscarImagen: searchTextImage; let i=index"
+        *ngFor="let imagen of listaImagenes | buscarImagen: searchTextImage:campoBusquedaImagen; let i=index"
         class="listaImagenes"
       >
         <div class="imagen">
