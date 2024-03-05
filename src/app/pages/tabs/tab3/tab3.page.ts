@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataService } from '../services/data.service';
+import { DataService } from '../../../services/data.service';
 import { ToastController } from '@ionic/angular';
-import { TabsPage } from '../tabs/tabs.page';
+import { TabsPage } from '../tabs.page';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { CookieService } from 'ngx-cookie-service';
 

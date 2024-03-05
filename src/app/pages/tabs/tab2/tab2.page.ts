@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
-import { DataService } from '../services/data.service';
+import { DataService } from '../../../services/data.service';
 import { Share } from '@capacitor/share';
-import { Foto } from '../models';
+import { Foto } from '../../../models';
 
 @Component({
   selector: 'app-tab2',

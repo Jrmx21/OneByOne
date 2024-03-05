@@ -6,7 +6,7 @@ import {
   NavController,
   ToastController,
 } from '@ionic/angular';
-import { EdicionFraseModalPage } from '../modals/edicion-frase-modal/edicion-frase-modal.page';
+import { EdicionFraseModalPage } from '../pages/modals/edicion-frase-modal/edicion-frase-modal.page';
 import { AuthService } from '../services/auth.service';
 import { LowerCasePipe } from '@angular/common';
 import { Router } from '@angular/router';

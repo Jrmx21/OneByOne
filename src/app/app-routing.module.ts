@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./tabs/tabs.module').then((m) => m.TabsPageModule),
+      import('./pages/tabs/tabs.module').then((m) => m.TabsPageModule),
     
   },
   {
@@ -19,14 +19,14 @@ const routes: Routes = [
   {
     path: 'edicion-frase-modal',
     loadChildren: () =>
-      import('./modals/edicion-frase-modal/edicion-frase-modal.module').then(
+      import('./pages/modals/edicion-frase-modal/edicion-frase-modal.module').then(
         (m) => m.EdicionFraseModalPageModule
       ),
   },
   {
     path: 'login',
     loadChildren: () =>
-      import('./login/login.module').then((m) => m.LoginPageModule),
+      import('./pages/login/login.module').then((m) => m.LoginPageModule),
   }
 ];
 @NgModule({
