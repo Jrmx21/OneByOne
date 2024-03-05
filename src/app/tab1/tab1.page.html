@@ -6,6 +6,7 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 <div class="ion-page" id="main-content">
   <ion-header>
     <ion-toolbar>
@@ -17,10 +18,13 @@
   <ion-content class="ion-padding">
     Tap the button in the toolbar to open the menu.
   </ion-content>
-  
 </div>
 <ion-content class="custom-content">
-  <ion-segment [(ngModel)]="campoBusqueda" (ionChange)="realizarBusqueda()" class="custom-segment">
+  <ion-segment
+    [(ngModel)]="campoBusqueda"
+    (ionChange)="realizarBusqueda()"
+    class="custom-segment"
+  >
     <ion-segment-button value="frase">
       <ion-label>Frase</ion-label>
     </ion-segment-button>
@@ -29,16 +33,19 @@
     </ion-segment-button>
   </ion-segment>
 
-  <ion-searchbar [(ngModel)]="filtro" (ionInput)="realizarBusqueda()" placeholder="Buscar" class="custom-searchbar"></ion-searchbar>
+  <ion-searchbar
+    [(ngModel)]="filtro"
+    (ionInput)="realizarBusqueda()"
+    placeholder="Buscar"
+    class="custom-searchbar"
+  ></ion-searchbar>
 
-    <ion-item *ngFor="let frase of frases" class="custom-item">
-      <ion-label>
-        
-        <strong> <ion-text id="autor">{{ frase.autor }}</ion-text><br /></strong>
-              <ion-note color="medium" class="ion-text-wrap" id="frase">
-                {{ frase.frase }}
-              </ion-note>
-            </ion-label>
-    </ion-item>
- 
+  <ion-item *ngFor="let frase of frases" class="custom-item">
+    <ion-label>
+      <strong> <ion-text id="autor">{{ frase.autor }}</ion-text><br /></strong>
+      <ion-note color="medium" class="ion-text-wrap" id="frase">
+        {{ frase.frase }}
+      </ion-note>
+    </ion-label>
+  </ion-item>
 </ion-content>
