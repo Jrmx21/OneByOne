@@ -9,30 +9,36 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from './services/data.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
-import { AuthGuard } from '@angular/fire/auth-guard';
 import { CookieService } from 'ngx-cookie-service';
+import { RegisterComponent } from './components/register/register.component';
+import { UserService } from './services/user.service';
+import { Auth, getAuth, provideAuth } from '@angular/fire/auth';
+import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { LoginComponent } from './components/login/login.component';
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,RegisterComponent,LoginComponent],
   imports: [
     ReactiveFormsModule,
-    AngularFireModule.initializeApp(environment.firebase),
+
     BrowserModule,
     IonicModule.forRoot(),
     AngularFireAuthModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-
+    ReactiveFormsModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
     
   ],
   providers: [
     CookieService,
-    AuthGuard,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     DataService,
+    UserService,
     
   ],
   

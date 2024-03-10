@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
 // import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
@@ -7,7 +9,6 @@ const routes: Routes = [
     path: '',
     loadChildren: () =>
       import('./pages/tabs/tabs.module').then((m) => m.TabsPageModule),
-    
   },
   {
     path: 'admin',
@@ -19,15 +20,20 @@ const routes: Routes = [
   {
     path: 'edicion-frase-modal',
     loadChildren: () =>
-      import('./pages/modals/edicion-frase-modal/edicion-frase-modal.module').then(
-        (m) => m.EdicionFraseModalPageModule
-      ),
+      import(
+        './pages/modals/edicion-frase-modal/edicion-frase-modal.module'
+      ).then((m) => m.EdicionFraseModalPageModule),
   },
   {
     path: 'login',
-    loadChildren: () =>
-      import('./pages/login/login.module').then((m) => m.LoginPageModule),
-  }
+component:LoginComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
+  },
+
+
 ];
 @NgModule({
   imports: [
