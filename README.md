@@ -25,3 +25,7 @@ Uso de componentes personalizados.
 Usaré local Storage en principio.
 Uso de rutas
 Usaremos rutas de las 3 “tabs” principales y para hacer los métodos get y post.
+
+MÁS INFORMACION:
+https://docs.google.com/document/d/1-n15R8fHiTPWs15h6tqU-viJ2JoANyDdhd7zRsqQJLA/edit?usp=sharing
+
