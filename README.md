@@ -26,6 +26,9 @@ Usaré local Storage en principio.
 Uso de rutas
 Usaremos rutas de las 3 “tabs” principales y para hacer los métodos get y post.
 
+MANUAL DEL USUARIO:
+https://docs.google.com/document/d/13sCFEjfv-gxSF0XIWPsmT8FvVD2L6HQ1JoB8-JOINyQ/edit?usp=sharing
+
 MÁS INFORMACION:
 https://docs.google.com/document/d/1-n15R8fHiTPWs15h6tqU-viJ2JoANyDdhd7zRsqQJLA/edit?usp=sharing
 
